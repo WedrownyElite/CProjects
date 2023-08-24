@@ -14,7 +14,7 @@ int main() {
 		string text;
 
 		fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
-
+                cout << "Files:" << endl;
 		//Print file names
 		while (getline(DBList, text)) {
 			cout << c << ": ";
