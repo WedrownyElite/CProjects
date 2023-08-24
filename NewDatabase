@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <filesystem>
 using namespace std;
 
 int main() {
@@ -20,6 +21,8 @@ int main() {
 			cout << text << endl;
 			c++;
 		}
+		
+		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
 		cin >> userInput;
 
@@ -27,27 +30,38 @@ int main() {
 
 		//Create new file
 		if (userInput == "C") {
-			string fileName;
+			string userInput;
 			cout << "Type desired file name" << endl;
-			cin >> fileName;
+			cin >> userInput;
 
+			//Add .txt to the end of userInput
 			string txt = ".txt";
-			string fileName1 = fileName + txt;
+			string fileName1 = userInput + txt;
 
+			//Create the file
 			ofstream fileName2(fileName1);
 			fileName2.close();
-		}
 
+			//Add userInput file name to DBList
+			fstream DBList("DBList.txt", ios::app);
+			if (DBList.is_open()) {
+				DBList << fileName1 << endl;
+				DBList.close();
+			}
+		}
+		//Open existing file
 		else {
 
 			int c = 1;
 			string text;
 			string txt = ".txt";
 			string fullFile = userInput + txt;
-			fstream fileName4(fullFile, ofstream::in | ofstream::out | ofstream::app);
-			if (fileName4.is_open()) {
+			//File found
+			if (std::filesystem::exists(fullFile)) {
+				fstream fileName( fullFile, fstream::out | fstream::app);
 				cout << fullFile << " has been opened!" << endl;
 			}
+			//File not found
 			else {
 				cout << "Error! " << fullFile << " Not found!" << endl;
 			}
