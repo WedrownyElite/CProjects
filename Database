@@ -6,51 +6,177 @@ using namespace std;
 
 int main() {
 
+	char op;
+	string fname;
+	string lname;
+	string gender;
+	string number;
+	string id;
+
+	// Get op
+	cout << "Edit (E), or write? (W) ";
+	cin >> op;
+
+	// Lowercase op
+	op = (char)tolower(op);
+
+	// Op check
+	while (op != 'w' && op != 'e' && op) {
+		cout << "Unknown. Edit, or write? ";
+		cin >> op;
+	}
+
+	// Write
+	if (op == 'w') {
+		// Last name
+		cout << "Last name: ";
+		cin >> lname;
+		// First name
+		cout << "First name: ";
+		cin >> fname;
+		// Gender
+		cout << "Gender: ";
+		cin >> gender;
+		// Gender Check
+		while (gender != "Female" && gender != "F" && gender != "Male" && gender != "M") {
+			cout << "Unknown. Gender: ";
+			cin >> gender;
+		}
+		if (gender == "Male" || gender == "M") {
+			gender = "M";
+		}
+		else if (gender == "Female" || gender == "F") {
+			gender = "F";
+		}
+		// Phone number
+		cout << "Phone number: ";
+		cin >> number;
+		// Phone number check
+		while (number.length() > 10) {
+			cout << "Too many digits" << endl;
+			cout << "Phone number: ";
+			cin >> number;
+		}
+		while (number.length() < 10) {
+			cout << "Not enough digits" << endl;
+			cout << "Phone number: ";
+			cin >> number;
+		}
+
+		// File entries
+
+		// Open Database
+		fstream Database("Database.txt", ios::app);
+		if (Database.is_open()) {
+			// Last name
+			Database << lname << "!";
+			// First name
+			Database << fname << "@";
+			// Gender
+			Database << gender << "#";
+			// Phone number
+			Database << number << "$" << endl;
+
+			Database.close();
+		}
+	}
+
+	// Edit
 	while (true) {
+	if (op == 'e') {
 
-		int c = 1;
-		string userInput;
 		string text;
-
-		fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
-
-		//Print file names
-		while (getline(DBList, text)) {
+		int c = 1;
+		fstream Database("Database.txt", fstream::in | fstream::out | fstream::app);
+		while (getline(Database, text)) {
 			cout << c << ": ";
 			cout << text << endl;
 			c++;
 		}
-		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
-		cin >> userInput;
+		Database.close();
 
-		DBList.close();
+		// Rewriting
+		int lineNumber;
+		string lname;
+		string fname;
+		string gender;
+		string number;
+		string line;
+		vector<string> lines;
+		char answer;
 
-		//Create new file
-		if (userInput == "C") {
-			string fileName;
-			cout << "Type desired file name" << endl;
-			cin >> fileName;
-
-			string txt = ".txt";
-			string fileName1 = fileName + txt;
-
-			ofstream fileName2(fileName1);
-			fileName2.close();
-		}
-
-		else {
-
-			int c = 1;
-			string text;
-			string txt = ".txt";
-			string fullFile = userInput + txt;
-			fstream fileName4(fullFile, ofstream::in | ofstream::out | ofstream::app);
-			if (fileName4.is_open()) {
-				cout << fullFile << " has been opened!" << endl;
+			// User input
+			// Line
+			cout << "Line: ";
+			cin >> lineNumber;
+			// Last name
+			cout << "Last name: ";
+			cin >> lname;
+			// First name
+			cout << "First name: ";
+			cin >> fname;
+			// Gender
+			cout << "Gender: ";
+			cin >> gender;
+			// Gender Check
+			while (gender != "Female" && gender != "F" && gender != "Male" && gender != "M") {
+				cout << "Unknown. Gender: ";
+				cin >> gender;
 			}
-			else {
-				cout << "Error! " << fullFile << " Not found!" << endl;
+			if (gender == "Male" || gender == "M") {
+				gender = "M";
+			}
+			else if (gender == "Female" || gender == "Male") {
+				gender = "F";
+			}
+			// Phone number
+			cout << "Phone number: ";
+			cin >> number;
+			// Phone number check
+			while (number.length() > 10) {
+				cout << "Too many digits" << endl;
+				cout << "Phone number: ";
+				cin >> number;
+			}
+			while (number.length() < 10) {
+				cout << "Not enough digits" << endl;
+				cout << "Phone number: ";
+				cin >> number;
+			}
+
+			// String combination
+			string userTCheck = lname + " " + fname + " " + gender + " " + number + " ";
+			string userText = lname + "!" + fname + "@" + gender + "#" + number + "$";
+
+			// String confirmation
+			cout << userTCheck << endl;
+			cout << "Is this correct? (Y/N)" << endl;
+			cin >> answer;
+
+			// Answered yes
+			if (answer == 'Y') {
+				// Add lines from Database to vector
+				Database = fstream("Database.txt", fstream::in);
+				while (getline(Database, line)) {
+					lines.push_back(line);
+				}
+				Database.close();
+
+				// Switch user defined line number
+				Database = fstream("Database.txt", fstream::trunc);
+				lineNumber--;
+				lines[lineNumber] = userText;
+
+				// Overwrite Database file with vector
+				for (std::string& line : lines) {
+					Database << line << endl;
+				}
+				// Rewrite done. YAY!
+				Database.close();
+				cout << "Rewrite Successful";
+				break;
 			}
 		}
 	}
+
 }
