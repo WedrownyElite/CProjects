@@ -52,6 +52,7 @@ int main() {
 		//Open existing file
 		else {
 
+			char userInput1;
 			int c = 1;
 			string text;
 			string txt = ".txt";
@@ -60,6 +61,21 @@ int main() {
 			if (std::filesystem::exists(fullFile)) {
 				fstream fileName( fullFile, fstream::out | fstream::app);
 				cout << fullFile << " has been opened!" << endl;
+				cout << endl;
+				//Options
+				cout << "What would you like to do with " << fullFile << "?" << endl;
+				cout << "N : Take notes" << endl;
+				cout << "E : General entries" << endl;
+				cin >> userInput1;
+				// Lowercase op
+				userInput1 = (char)tolower(userInput1);
+
+				//Checker
+				if (userInput1 == 'n') {
+					cout << "You can start to take notes"
+						while (true);
+				}
+
 			}
 			//File not found
 			else {
