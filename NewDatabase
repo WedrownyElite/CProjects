@@ -21,7 +21,7 @@ int main() {
 			cout << text << endl;
 			c++;
 		}
-		
+
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
 		cin >> userInput;
@@ -59,7 +59,7 @@ int main() {
 			string fullFile = userInput + txt;
 			//File found
 			if (std::filesystem::exists(fullFile)) {
-				fstream fileName( fullFile, fstream::out | fstream::app);
+				fstream fileName(fullFile, fstream::out | fstream::app);
 				cout << fullFile << " has been opened!" << endl;
 				cout << endl;
 				//Options
@@ -70,16 +70,96 @@ int main() {
 				// Lowercase op
 				userInput1 = (char)tolower(userInput1);
 
-				//Checker
+				//Note Check
 				if (userInput1 == 'n') {
-					cout << "You can start to take notes"
-						while (true);
+					cout << "You can start to take notes. When you're done, type 'end'" << endl;
+					//Note loop
+					while (true) {
+						string check = "end";
+						string notes;
+
+						//UserInput
+						std::getline(std::cin, notes);
+
+						//`end` check
+						if (notes == check) {
+							fileName.close();
+							break;
+						}
+						//Print `notes` to fileName
+						fileName << notes;
+
+					}
+
 				}
 
-			}
-			//File not found
-			else {
-				cout << "Error! " << fullFile << " Not found!" << endl;
+				//General Entries Check
+				if (userInput1 == 'e') {
+					string fname;
+					string lname;
+					string gender;
+					string number;
+					int num = rand() % 10000;
+					std::string id = std::to_string(num);
+
+					// Last name
+					cout << "Last name: ";
+					cin >> lname;
+					// First name
+					cout << "First name: ";
+					cin >> fname;
+					// Gender
+					cout << "Gender: ";
+					cin >> gender;
+					// Gender Check
+					while (gender != "Female" && gender != "F" && gender != "Male" && gender != "M") {
+						cout << "Unknown. Gender: ";
+						cin >> gender;
+					}
+					if (gender == "Male" || gender == "M") {
+						gender = "M";
+					}
+					else if (gender == "Female" || gender == "F") {
+						gender = "F";
+					}
+					// Phone number
+					cout << "Phone number: ";
+					cin >> number;
+					// Phone number check
+					while (number.length() > 10) {
+						cout << "Too many digits" << endl;
+						cout << "Phone number: ";
+						cin >> number;
+					}
+					while (number.length() < 10) {
+						cout << "Not enough digits" << endl;
+						cout << "Phone number: ";
+						cin >> number;
+					}
+					char answer;
+
+					// String combination
+					string userTCheck = lname + " " + fname + " " + gender + " " + number + " ";
+					string userText = lname + "!" + fname + "@" + gender + "#" + number + "$" + id;
+
+					// String confirmation
+					cout << userTCheck << endl;
+					cout << "Is this correct? (Y/N)" << endl;
+					cin >> answer;
+
+					// Answered yes
+					if (answer == 'Y') {
+						fileName = fstream(fullFile, fstream::out | fstream::app);
+						fileName << userText;
+						fileName.close();
+						cout << "Saved successfully!" << endl;
+					}
+
+				}
+				//File not found
+				else {
+					cout << "Error! " << fullFile << " Not found!" << endl;
+				}
 			}
 		}
 	}
