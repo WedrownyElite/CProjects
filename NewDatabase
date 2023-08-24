@@ -1,0 +1,56 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+
+	while (true) {
+
+		int c = 1;
+		string userInput;
+		string text;
+
+		fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
+
+		//Print file names
+		while (getline(DBList, text)) {
+			cout << c << ": ";
+			cout << text << endl;
+			c++;
+		}
+		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
+		cin >> userInput;
+
+		DBList.close();
+
+		//Create new file
+		if (userInput == "C") {
+			string fileName;
+			cout << "Type desired file name" << endl;
+			cin >> fileName;
+
+			string txt = ".txt";
+			string fileName1 = fileName + txt;
+
+			ofstream fileName2(fileName1);
+			fileName2.close();
+		}
+
+		else {
+
+			int c = 1;
+			string text;
+			string txt = ".txt";
+			string fullFile = userInput + txt;
+			fstream fileName4(fullFile, ofstream::in | ofstream::out | ofstream::app);
+			if (fileName4.is_open()) {
+				cout << fullFile << " has been opened!" << endl;
+			}
+			else {
+				cout << "Error! " << fullFile << " Not found!" << endl;
+			}
+		}
+	}
+}
