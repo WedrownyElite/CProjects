@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <windows.h>
 using namespace std;
 
 int main() {
@@ -20,6 +21,7 @@ int main() {
 			cout << text << endl;
 			c++;
 		}
+		cout << endl;
 
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
@@ -56,15 +58,11 @@ int main() {
 			string text;
 			string txt = ".txt";
 			string fullFile = userInput + txt;
-			string period = ".";
-			string space = " ";
-			string rawNotes;
-			string notes;
-			string notes1;
 
 			//File found
 			if (std::filesystem::exists(fullFile)) {
 				fstream fileName(fullFile, fstream::out | fstream::app);
+				system("cls");
 				cout << fullFile << " has been opened!" << endl;
 				cout << endl;
 				//Options
@@ -77,11 +75,16 @@ int main() {
 
 				//Note Check
 				if (userInput1 == 'n') {
+					system("cls");
 					cout << "You can start to take notes. When you're done, type 'end'" << endl;
 					//Note loop
 					while (true) {
 						string check = "end";
 						string notes;
+						string period = ".";
+						string space = " ";
+						string rawNotes;
+						string notes1;
 
 						//UserInput
 						std::getline(std::cin, rawNotes);
@@ -94,18 +97,13 @@ int main() {
 
 						//Period check
 						if (rawNotes.length() > 0 && rawNotes[rawNotes.length() - 1] != '.') {
-								string notes = rawNotes + period;
-								cout << "Notes: " << notes << endl;
+							string notes = rawNotes + period + space;
+							fileName << notes;
 						}
-
-						//Space check
-						if (notes.length() > 0 && notes[notes.length() - 1] != ' ') {
-								string notes1 = notes + space;
-								cout << "Notes1: " << notes1 << endl;
+						else if (rawNotes.length() > 0 && rawNotes[rawNotes.length() - 1] == '.') {
+							string notes = rawNotes + space;
+							fileName << notes;
 						}
-
-						//Print `notes` to fileName
-						fileName << notes1;
 					}
 				}
 
@@ -172,11 +170,13 @@ int main() {
 					}
 
 				}
+			}
 				//File not found
-				else {
+				else if (!std::filesystem::exists(fullFile)) {
+					system("cls");
 					cout << "Error:0000 " << fullFile << " Not found!" << endl;
 				}
-			}
 		}
+
 	}
 }
