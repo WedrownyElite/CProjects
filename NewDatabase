@@ -6,11 +6,18 @@
 #include <windows.h>
 using namespace std;
 
+int hud() {
+	return 0;
+}
+
 int main() {
 
 	while (true) {
 
 		int c = 1;
+		string dir;
+		string dir1;
+		string dir2;
 		string userInput;
 		string text;
 
@@ -38,6 +45,10 @@ int main() {
 			//Add .txt to the end of userInput
 			string txt = ".txt";
 			string fileName1 = userInput + txt;
+
+			if (std::filesystem::exists(fileName1)) {
+				cout << fileName1 << " already exists!" << endl;
+			}
 
 			//Create the file
 			ofstream fileName2(fileName1);
@@ -171,11 +182,11 @@ int main() {
 
 				}
 			}
-				//File not found
-				else if (!std::filesystem::exists(fullFile)) {
-					system("cls");
-					cout << "Error:0000 " << fullFile << " Not found!" << endl;
-				}
+			//File not found
+			else if (!std::filesystem::exists(fullFile)) {
+				system("cls");
+				cout << "Error:0000 " << fullFile << " Not found!" << endl;
+			}
 		}
 
 	}
