@@ -237,6 +237,7 @@ int main() {
 							cout << text << endl;
 							c++;
 						}
+						fileName.close();
 						cout << endl;
 						cin >> userInput;
 
