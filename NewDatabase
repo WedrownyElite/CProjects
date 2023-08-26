@@ -29,7 +29,6 @@ int main() {
 			c++;
 		}
 		cout << endl;
-
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
 		cin >> userInput;
@@ -37,29 +36,43 @@ int main() {
 		DBList.close();
 
 		//Create new file
-		if (userInput == "C") {
+		if (userInput == "C" || userInput == "c") {
+			int c = 1;
+			string text;
 			string userInput;
-			cout << "Type desired file name" << endl;
+			system("cls");
+			cout << "Files:" << endl;
+			fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
+			while (getline(DBList, text)) {
+				cout << text << endl;
+				c++;
+			}
+			cout << endl;
+			DBList.close();
+			cout << "Type desired file name:" << endl;
 			cin >> userInput;
 
 			//Add .txt to the end of userInput
 			string txt = ".txt";
 			string fileName1 = userInput + txt;
 
-			if (std::filesystem::exists(fileName1)) {
-				cout << fileName1 << " already exists!" << endl;
+			if (!std::filesystem::exists(fileName1)) {
+				//Create the file
+				ofstream fileName2(fileName1);
+				fileName2.close();
+
+				//Add userInput file name to DBList
+				fstream DBList("DBList.txt", ios::app);
+				if (DBList.is_open()) {
+					DBList << fileName1 << endl;
+					DBList.close();
+				}
+			}
+			else if (std::filesystem::exists(fileName1)) {
+				system("cls");
+				cout << "ERROR:0001" << endl << fileName1 << " ALREADY EXISTS!" << endl << endl;
 			}
 
-			//Create the file
-			ofstream fileName2(fileName1);
-			fileName2.close();
-
-			//Add userInput file name to DBList
-			fstream DBList("DBList.txt", ios::app);
-			if (DBList.is_open()) {
-				DBList << fileName1 << endl;
-				DBList.close();
-			}
 		}
 		//Open existing file
 		else {
@@ -80,6 +93,7 @@ int main() {
 				cout << "What would you like to do with " << fullFile << "?" << endl;
 				cout << "N : Take notes" << endl;
 				cout << "E : General entries" << endl;
+				cout << "R : Read from file" << endl;
 				cin >> userInput1;
 				// Lowercase op
 				userInput1 = (char)tolower(userInput1);
@@ -103,6 +117,7 @@ int main() {
 						//`end` check
 						if (rawNotes == check) {
 							fileName.close();
+							system("cls");
 							break;
 						}
 
@@ -120,72 +135,126 @@ int main() {
 
 				//General Entries Check
 				if (userInput1 == 'e') {
-					string fname;
-					string lname;
-					string gender;
-					string number;
-					int num = rand() % 10000;
-					std::string id = std::to_string(num);
+					while (true) {
+						string fname;
+						string lname;
+						string gender;
+						string number;
+						int num = rand() % 10000;
+						std::string id = std::to_string(num);
+						system("cls");
 
-					// Last name
-					cout << "Last name: ";
-					cin >> lname;
-					// First name
-					cout << "First name: ";
-					cin >> fname;
-					// Gender
-					cout << "Gender: ";
-					cin >> gender;
-					// Gender Check
-					while (gender != "Female" && gender != "F" && gender != "Male" && gender != "M") {
-						cout << "Unknown. Gender: ";
+						cout << "Type 'end' to leave" << endl << endl;
+
+						// Last name
+						cout << "Last name: ";
+						cin >> lname;
+						//'end' check
+						if (lname == "end") {
+							system("cls");
+							break;
+						}
+						// First name
+						cout << "First name: ";
+						cin >> fname;
+						//'end' check
+						if (fname == "end") {
+							system("cls");
+							break;
+						}
+						// Gender
+						cout << "Gender: ";
 						cin >> gender;
-					}
-					if (gender == "Male" || gender == "M") {
-						gender = "M";
-					}
-					else if (gender == "Female" || gender == "F") {
-						gender = "F";
-					}
-					// Phone number
-					cout << "Phone number: ";
-					cin >> number;
-					// Phone number check
-					while (number.length() > 10) {
-						cout << "Too many digits" << endl;
+						//'end' check
+						if (gender == "end") {
+							system("cls");
+							break;
+						}
+						// Gender Check
+						while (gender != "Female" && gender != "F" && gender != "Male" && gender != "M") {
+							cout << "Unknown. Gender: ";
+							cin >> gender;
+						}
+						if (gender == "Male" || gender == "M") {
+							gender = "M";
+						}
+						else if (gender == "Female" || gender == "F") {
+							gender = "F";
+						}
+						// Phone number
 						cout << "Phone number: ";
 						cin >> number;
+						//'end' check
+						if (number == "end") {
+							system("cls");
+							break;
+						}
+						// Phone number check
+						while (number.length() > 10) {
+							cout << "Too many digits" << endl;
+							cout << "Phone number: ";
+							cin >> number;
+						}
+						while (number.length() < 10) {
+							cout << "Not enough digits" << endl;
+							cout << "Phone number: ";
+							cin >> number;
+						}
+						char answer;
+
+						// String combination
+						string userTCheck = lname + " " + fname + " " + gender + " " + number + " ";
+						string userText = lname + "!" + fname + "@" + gender + "#" + number + "$" + id;
+
+						// String confirmation
+						cout << userTCheck << endl;
+						cout << "Is this correct? (Y/N)" << endl;
+						cin >> answer;
+
+						// Answered yes
+						if (answer == 'Y') {
+							fileName = fstream(fullFile, fstream::out | fstream::app);
+							fileName << userText;
+							fileName.close();
+							cout << "Saved successfully!" << endl;
+						}
 					}
-					while (number.length() < 10) {
-						cout << "Not enough digits" << endl;
-						cout << "Phone number: ";
-						cin >> number;
+
+				}
+				//Read from file
+				else if (userInput1 == 'r') {
+					while (true) {
+						string userInput;
+						string text;
+						int c = 1;
+
+						system("cls");
+						cout << "Type 'end' to leave" << endl << endl;
+						cout << fullFile << ":" << endl;
+
+						fstream fileName(fullFile, fstream::in | fstream::out | fstream::app);
+						while (getline(fileName, text)) {
+							cout << text << endl;
+							c++;
+						}
+						cout << endl;
+						cin >> userInput;
+
+						if (userInput == "end") {
+							system("cls");
+							break;
+						}
 					}
-					char answer;
-
-					// String combination
-					string userTCheck = lname + " " + fname + " " + gender + " " + number + " ";
-					string userText = lname + "!" + fname + "@" + gender + "#" + number + "$" + id;
-
-					// String confirmation
-					cout << userTCheck << endl;
-					cout << "Is this correct? (Y/N)" << endl;
-					cin >> answer;
-
-					// Answered yes
-					if (answer == 'Y') {
-						fileName = fstream(fullFile, fstream::out | fstream::app);
-						fileName << userText;
-						fileName.close();
-						cout << "Saved successfully!" << endl;
-					}
-
+				}
+				else if (userInput1 != 'r' && userInput1 != 'e' && userInput1 != 'n') {
+					system("cls");
+					cout << "ERROR:0002" << endl << "Unknown operator" << endl << endl;
 				}
 			}
 			//File not found
 			else if (!std::filesystem::exists(fullFile)) {
 				system("cls");
-				cout << "Error:0000 " << fullFile << " Not found!" << endl;
+				cout << "ERROR:0000 " << endl << fullFile << " Not found!" << endl << endl;
 			}
 		}
 
