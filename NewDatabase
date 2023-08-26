@@ -56,6 +56,7 @@ int main() {
 			string txt = ".txt";
 			string fileName1 = userInput + txt;
 
+			//File !exist check
 			if (!std::filesystem::exists(fileName1)) {
 				//Create the file
 				ofstream fileName2(fileName1);
@@ -67,6 +68,7 @@ int main() {
 					DBList << fileName1 << endl;
 					DBList.close();
 				}
+				system("cls");
 			}
 			else if (std::filesystem::exists(fileName1)) {
 				system("cls");
