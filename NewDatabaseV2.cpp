@@ -19,6 +19,7 @@ int options(string fullFile) {
 	cout << "N : Take notes" << endl;
 	cout << "E : General entries" << endl;
 	cout << "R : Read from file" << endl;
+	cout << "D : Delete file" << endl;
 	cout << "B : Go back" << endl;
 
 	cin >> userInput1;
@@ -33,13 +34,6 @@ int printFileNames(int c, string text, fstream& DBList) {
 		cout << text << endl;
 		c++;
 	}
-	return 0;
-}
-
-int printDBList(int c, string text, fstream& DBList) {
-	cout << "Files:" << endl;
-	printFileNames(c, text, DBList);
-	cout << endl;
 	return 0;
 }
 
@@ -248,7 +242,7 @@ int readFile(string fullFile) {
 		return 0;
 	}
 }
-
+//Options if statements
 int fileFound(string fullFile) {
 	while (true) {
 		fstream fileName(filesystem::current_path() / "files" / fullFile, fstream::out | fstream::app);
@@ -276,6 +270,11 @@ int fileFound(string fullFile) {
 		//Read from file
 		else if (userInput1 == 'r') {
 			readFile(fullFile);
+		}
+		else if (userInput1 == 'd') {
+			int result = filesystem::remove(filesystem::current_path() / "files" / fullFile);
+			cout << result << endl;
+			cout << fullFile << " has been deleted" << endl << endl;
 		}
 		//Back
 		else if (userInput1 == 'b') {
@@ -308,6 +307,7 @@ int openFile(string userInput) {
 		fileNotFound(fullFile);
 		return 1;
 	}
+	return 0;
 }
 
 int main() {
