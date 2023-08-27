@@ -66,7 +66,7 @@ int createFile() {
 	while (true) {
 		cout << "Files:" << endl;
 
-		fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
+		fstream DBList(filesystem::current_path() / "files" / "DBList.txt", fstream::in | fstream::out | fstream::app);
 		while (getline(DBList, text)) {
 			cout << text << endl;
 			c++;
@@ -88,21 +88,14 @@ int createFile() {
 	string fileName1 = userInput + ".txt";
 
 	//File !exist check
-	if (!std::filesystem::exists(fileName1)) {
+	if (!std::filesystem::exists(filesystem::current_path() / "files" / fileName1)) {
 		//Create the file
-		ofstream fileName2(fileName1);
+		ofstream fileName2(filesystem::current_path() / "files" / fileName1);
 		fileName2.close();
-
-		//Add userInput file name to DBList
-		fstream DBList("DBList.txt", ios::app);
-		if (DBList.is_open()) {
-			DBList << fileName1 << endl;
-			DBList.close();
-		}
 		system("cls");
 	}
 	//File exists check
-	else if (std::filesystem::exists(fileName1)) {
+	else if (std::filesystem::exists(filesystem::current_path() / "files" / fileName1)) {
 		system("cls");
 		cout << "ERROR:0001" << endl << fileName1 << " ALREADY EXISTS!" << endl << endl;
 		return 1;
@@ -217,7 +210,7 @@ int generalEntries(string fullFile, fstream& fileName) {
 
 		// Answered yes
 		if (answer == 'Y') {
-			fileName = fstream(fullFile, fstream::out | fstream::app);
+			fileName = fstream(filesystem::current_path() / "files" / fullFile, fstream::out | fstream::app);
 			fileName << userText;
 			fileName.close();
 			cout << "Saved successfully!" << endl;
@@ -237,7 +230,7 @@ int readFile(string fullFile) {
 		cout << fullFile << ":" << endl;
 
 		//Print  contents
-		fstream fileName(fullFile, fstream::in | fstream::out | fstream::app);
+		fstream fileName(filesystem::current_path() / "files" / fullFile, fstream::in | fstream::out | fstream::app);
 		while (getline(fileName, text)) {
 			cout << text << endl;
 			c++;
@@ -257,7 +250,7 @@ int readFile(string fullFile) {
 
 int fileFound(string fullFile) {
 	while (true) {
-		fstream fileName(fullFile, fstream::out | fstream::app);
+		fstream fileName(filesystem::current_path() / "files" / fullFile, fstream::out | fstream::app);
 		system("cls");
 		cout << fullFile << " has been opened!" << endl;
 		cout << endl;
@@ -305,12 +298,12 @@ int openFile(string userInput) {
 	string fullFile = userInput + txt;
 
 	//File found
-	if (std::filesystem::exists(fullFile)) {
+	if (std::filesystem::exists(filesystem::current_path() / "files" / fullFile)) {
 		fileFound(fullFile);
 		return 0;
 	}
 	//File not found
-	else if (!std::filesystem::exists(fullFile)) {
+	else if (!std::filesystem::exists(filesystem::current_path() / "files" / fullFile)) {
 		fileNotFound(fullFile);
 		return 1;
 	}
@@ -323,16 +316,26 @@ int main() {
 		int c = 1;
 		string userInput;
 		string text;
+		filesystem::path p = filesystem::current_path();
 
-		//Print file names from DBList
-		fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
-		printDBList(c, text, DBList);
+		//Print file names from 'files'
+		const filesystem::path files{"files"};
+		if (is_directory(p / "files")) {
+			cout << "Files:" << endl;
+			for (const auto& entry : filesystem::directory_iterator(files)) {
+				if (entry.is_regular_file()) {
+					cout << entry.path().filename() << endl;
+				}
+			}
+		}
+		else {
+			create_directories(files);
+			cout << "'files' folder created at " << (p / "files").string() << endl << endl;
+		}
 
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
 		cin >> userInput;
-
-		DBList.close();
 
 		//Create new file
 		if (userInput == "C" || userInput == "c") {
