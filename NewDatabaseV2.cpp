@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
-#include <windows.h>
+#include <Windows.h>
 using namespace std;
 
 int fileNotFound(string fullFile) {
@@ -271,10 +271,17 @@ int fileFound(string fullFile) {
 		else if (userInput1 == 'r') {
 			readFile(fullFile);
 		}
+		//Delete file
 		else if (userInput1 == 'd') {
-			int result = filesystem::remove(filesystem::current_path() / "files" / fullFile);
-			cout << result << endl;
-			cout << fullFile << " has been deleted" << endl << endl;
+			int result = filesystem::remove(fullFile);
+			if (result == 0) {
+				cout << fullFile << " has been deleted" << endl << endl;
+				return 0;
+			}
+			else {
+				cout << "Error: 0003" << endl << fullFile << " deletion unsuccessful";
+				return 1;
+			}
 		}
 		//Back
 		else if (userInput1 == 'b') {
