@@ -123,11 +123,11 @@ int noteLoop(fstream& fileName) {
 		//Period check
 		if (rawNotes.length() > 0 && rawNotes[rawNotes.length() - 1] != '.') {
 			string notes = rawNotes + "." + " ";
-			fileName << notes;
+			fileName << notes << endl;
 		}
 		else if (rawNotes.length() > 0 && rawNotes[rawNotes.length() - 1] == '.') {
 			string notes = rawNotes + " ";
-			fileName << notes;
+			fileName << notes << endl;
 		}
 	}
 }
@@ -212,12 +212,12 @@ int generalEntries(string fullFile, fstream& fileName) {
 		// Answered yes
 		if (answer == 'Y') {
 			fileName = fstream(filesystem::current_path() / "files" / fullFile, fstream::out | fstream::app);
-			fileName << userText;
+			fileName << userText << endl;
 			fileName.close();
 			cout << "Saved successfully!" << endl;
 		}
-		return 0;
 	}
+	return 0;
 }
 
 int readFile(string fullFile) {
@@ -318,7 +318,7 @@ int main() {
 		string userInput;
 		string text;
 		filesystem::path p = filesystem::current_path();
-
+		system("cls");
 		//Print file names from 'files'
 		const filesystem::path files{"files"};
 		if (is_directory(p / "files")) {
