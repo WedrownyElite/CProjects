@@ -6,18 +6,11 @@
 #include <windows.h>
 using namespace std;
 
-int hud() {
-	return 0;
-}
-
 int main() {
 
 	while (true) {
 
 		int c = 1;
-		string dir;
-		string dir1;
-		string dir2;
 		string userInput;
 		string text;
 
@@ -40,8 +33,10 @@ int main() {
 			int c = 1;
 			string text;
 			string userInput;
+
 			system("cls");
 			cout << "Files:" << endl;
+
 			fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
 			while (getline(DBList, text)) {
 				cout << text << endl;
@@ -70,6 +65,7 @@ int main() {
 				}
 				system("cls");
 			}
+			//File exists check
 			else if (std::filesystem::exists(fileName1)) {
 				system("cls");
 				cout << "ERROR:0001" << endl << fileName1 << " ALREADY EXISTS!" << endl << endl;
@@ -96,6 +92,7 @@ int main() {
 				cout << "N : Take notes" << endl;
 				cout << "E : General entries" << endl;
 				cout << "R : Read from file" << endl;
+
 				cin >> userInput1;
 				// Lowercase op
 				userInput1 = (char)tolower(userInput1);
@@ -104,6 +101,7 @@ int main() {
 				if (userInput1 == 'n') {
 					system("cls");
 					cout << "You can start to take notes. When you're done, type 'end'" << endl;
+
 					//Note loop
 					while (true) {
 						string check = "end";
@@ -116,7 +114,7 @@ int main() {
 						//UserInput
 						std::getline(std::cin, rawNotes);
 
-						//`end` check
+						//`end` Check
 						if (rawNotes == check) {
 							fileName.close();
 							system("cls");
@@ -135,7 +133,7 @@ int main() {
 					}
 				}
 
-				//General Entries Check
+				//General Entries
 				if (userInput1 == 'e') {
 					while (true) {
 						string fname;
@@ -234,6 +232,7 @@ int main() {
 						cout << "Type 'end' to leave" << endl << endl;
 						cout << fullFile << ":" << endl;
 
+						//Print  contents
 						fstream fileName(fullFile, fstream::in | fstream::out | fstream::app);
 						while (getline(fileName, text)) {
 							cout << text << endl;
@@ -243,12 +242,14 @@ int main() {
 						cout << endl;
 						cin >> userInput;
 
+						//'end' Check
 						if (userInput == "end") {
 							system("cls");
 							break;
 						}
 					}
 				}
+				//Unknown op
 				else if (userInput1 != 'r' && userInput1 != 'e' && userInput1 != 'n') {
 					system("cls");
 					cout << "ERROR:0002" << endl << "Unknown operator" << endl << endl;
