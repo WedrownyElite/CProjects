@@ -62,17 +62,18 @@ int createFile() {
 	string text;
 	string userInput;
 
+	filesystem::path p = filesystem::current_path();
+	const filesystem::path files{"files"};
 	system("cls");
 	while (true) {
 		cout << "Files:" << endl;
-
-		fstream DBList(filesystem::current_path() / "files" / "DBList.txt", fstream::in | fstream::out | fstream::app);
-		while (getline(DBList, text)) {
-			cout << text << endl;
-			c++;
+		for (const auto& entry : filesystem::directory_iterator(files)) {
+			if (entry.is_regular_file()) {
+				cout << entry.path().filename() << endl;
+			}
 		}
 		cout << endl;
-		DBList.close();
+
 		cout << "Type desired file name:" << endl;
 		cin >> userInput;
 
@@ -327,6 +328,7 @@ int main() {
 					cout << entry.path().filename() << endl;
 				}
 			}
+			cout << endl;
 		}
 		else {
 			create_directories(files);
