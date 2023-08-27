@@ -6,6 +6,12 @@
 #include <windows.h>
 using namespace std;
 
+int fileNotFound(string fullFile) {
+	system("cls");
+	cout << "ERROR:0000 " << endl << fullFile << " Not found!" << endl << endl;
+	return 1;
+}
+
 int options(string fullFile) {
 	char userInput1;
 
@@ -27,6 +33,13 @@ int printFileNames(int c, string text, fstream& DBList) {
 		cout << text << endl;
 		c++;
 	}
+	return 0;
+}
+
+int printDBList(int c, string text, fstream& DBList) {
+	cout << "Files:" << endl;
+	printFileNames(c, text, DBList);
+	cout << endl;
 	return 0;
 }
 
@@ -242,6 +255,67 @@ int readFile(string fullFile) {
 	}
 }
 
+int fileFound(string fullFile) {
+	while (true) {
+		fstream fileName(fullFile, fstream::out | fstream::app);
+		system("cls");
+		cout << fullFile << " has been opened!" << endl;
+		cout << endl;
+
+		//Options
+		char userInput1 = options(fullFile);
+
+		//Note Check
+		if (userInput1 == 'n') {
+			system("cls");
+			cout << "You can start to take notes. When you're done, type 'end'" << endl;
+
+			//Note loop
+			noteLoop(fileName);
+		}
+
+		//General Entries
+		if (userInput1 == 'e') {
+			generalEntries(fullFile, fileName);
+
+		}
+		//Read from file
+		else if (userInput1 == 'r') {
+			readFile(fullFile);
+		}
+		//Back
+		else if (userInput1 == 'b') {
+			system("cls");
+			return 0;
+		}
+		//Unknown op
+		else if (userInput1 != 'r' && userInput1 != 'e' && userInput1 != 'n') {
+			system("cls");
+			cout << "ERROR:0002" << endl << "Unknown operator" << endl << endl;
+			return 1;
+		}
+		return 0;
+	}
+}
+
+int openFile(string userInput) {
+	int c = 1;
+	string text;
+	string txt = ".txt";
+	string fullFile = userInput + txt;
+
+	//File found
+	if (std::filesystem::exists(fullFile)) {
+		fileFound(fullFile);
+		return 0;
+	}
+	//File not found
+	else if (!std::filesystem::exists(fullFile)) {
+		fileNotFound(fullFile);
+		return 1;
+	}
+}
+
 int main() {
 
 	while (true) {
@@ -250,11 +324,10 @@ int main() {
 		string userInput;
 		string text;
 
-		fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
-		cout << "Files:" << endl;
 		//Print file names from DBList
-		printFileNames(c, text, DBList);
-		cout << endl;
+		fstream DBList("DBList.txt", fstream::in | fstream::out | fstream::app);
+		printDBList(c, text, DBList);
+
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
 		cin >> userInput;
@@ -267,58 +340,7 @@ int main() {
 		}
 		//Open existing file
 		else {
-			int c = 1;
-			string text;
-			string txt = ".txt";
-			string fullFile = userInput + txt;
-
-			//File found
-			if (std::filesystem::exists(fullFile)) {
-				while (true) {
-					fstream fileName(fullFile, fstream::out | fstream::app);
-					system("cls");
-					cout << fullFile << " has been opened!" << endl;
-					cout << endl;
-					//Options
-					options(fullFile);
-					char userInput1 = options(fullFile);
-
-					//Note Check
-					if (userInput1 == 'n') {
-						system("cls");
-						cout << "You can start to take notes. When you're done, type 'end'" << endl;
-
-						//Note loop
-						noteLoop(fileName);
-					}
-
-					//General Entries
-					if (userInput1 == 'e') {
-						generalEntries(fullFile, fileName);
-
-					}
-					//Read from file
-					else if (userInput1 == 'r') {
-						readFile(fullFile);
-					}
-					//Back
-					else if (userInput1 == 'b') {
-						system("cls");
-						break;
-					}
-					//Unknown op
-					else if (userInput1 != 'r' && userInput1 != 'e' && userInput1 != 'n') {
-						system("cls");
-						cout << "ERROR:0002" << endl << "Unknown operator" << endl << endl;
-						break;
-					}
-				}
-			}
-			//File not found
-			else if (!std::filesystem::exists(fullFile)) {
-				system("cls");
-				cout << "ERROR:0000 " << endl << fullFile << " Not found!" << endl << endl;
-			}
+			openFile(userInput);
 		}
 	}
 }
