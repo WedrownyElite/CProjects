@@ -49,14 +49,50 @@ int uCharCheck(string userInput) {
 	return 0;
 }
 
-int createFile() {
+int dirPath(string fullFile, filesystem::path files) {
+	system("cls");
+	cout << files << " > " << fullFile << endl << endl;
+	return 0;
+}
+
+int dirPathBack(filesystem::path files) {
+	system("cls");
+	cout << files << endl << endl;
+	return 0;
+}
+
+int dirPathOp(string fullFile, char userInput1, filesystem::path files) {
+
+	system("cls");
+	//Note path
+	if (userInput1 == 'n') {
+		cout << files << " > " << fullFile << " > " << "Notes" << endl << endl;
+	}
+	else if (userInput1 == 'e') {
+		cout << files << " > " << fullFile << " > " << "Entries" << endl << endl;
+	}
+	else if (userInput1 == 'r') {
+		cout << files << " > " << fullFile << " > " << "Read" << endl << endl;
+	}
+	else {
+		cout << files << endl << endl;
+	}
+	return 0;
+}
+
+int dirPathCreate(string userInput, filesystem::path files) {
+	system("cls");
+	cout << files << " > " << "Create" << endl << endl;
+	return 0;
+}
+
+int createFile(string userInput) {
 	int c = 1;
 	string text;
-	string userInput;
 
 	filesystem::path p = filesystem::current_path();
 	const filesystem::path files{"files"};
-	system("cls");
+	dirPathCreate(userInput, files);
 	while (true) {
 		cout << "Files:" << endl;
 		for (const auto& entry : filesystem::directory_iterator(files)) {
@@ -239,37 +275,6 @@ int readFile(string fullFile) {
 	}
 }
 
-int dirPath(string fullFile, filesystem::path files) {
-	system("cls");
-	cout << files << " > " << fullFile << endl << endl;
-	return 0;
-}
-
-int dirPathBack(filesystem::path files) {
-	system("cls");
-	cout << files << endl << endl;
-	return 0;
-}
-
-int dirPathOp(string fullFile, char userInput1, filesystem::path files) {
-
-	system("cls");
-	//Note path
-	if (userInput1 == 'n') {
-		cout << files << " > " << fullFile << " > " << "Notes" << endl << endl;
-	}
-	else if (userInput1 == 'e') {
-		cout << files << " > " << fullFile << " > " << "Entries" << endl << endl;
-	}
-	else if (userInput1 == 'r') {
-		cout << files << " > " << fullFile << " > " << "Read" << endl << endl;
-	}
-	else {
-		cout << files << endl << endl;
-	}
-	return 0;
-}
-
 int opIfStates(fstream& fileName, char userInput1, string fullFile) {
 	//Note Check
 	const filesystem::path files{"files"};
@@ -341,8 +346,7 @@ int fileFound(string fullFile) {
 int openFile(string userInput) {
 	int c = 1;
 	string text;
-	string txt = ".txt";
-	string fullFile = userInput + txt;
+	string fullFile = userInput + ".txt";
 
 	//File found
 	if (std::filesystem::exists(filesystem::current_path() / "files" / fullFile)) {
@@ -358,8 +362,8 @@ int openFile(string userInput) {
 }
 
 int printFileNames(filesystem::path files, filesystem::path p) {
-	cout << "Files:" << endl;
 	if (filesystem::is_directory(p / "files")) {
+		cout << "Files:" << endl;
 		for (const auto& entry : filesystem::directory_iterator(files)) {
 			if (entry.is_regular_file()) {
 				cout << entry.path().filename() << endl;
@@ -380,6 +384,11 @@ int printFileNames(filesystem::path files, filesystem::path p) {
 	return 0;
 }
 
+int openFolder() {
+
+	return 0;
+}
+
 int main() {
 
 	while (true) {
@@ -392,7 +401,7 @@ int main() {
 
 		dirPathBack(files);
 		//Print file names from 'files'
-			printFileNames(files, p);
+		printFileNames(files, p);
 
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
@@ -400,7 +409,10 @@ int main() {
 
 		//Create new file
 		if (userInput == "C" || userInput == "c") {
-			createFile();
+			createFile(userInput);
+		}
+		else if (filesystem::is_directory(p / "files" / userInput)) {
+			openFolder();
 		}
 		//Open existing file
 		else {
