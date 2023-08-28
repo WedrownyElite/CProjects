@@ -242,7 +242,53 @@ int readFile(string fullFile) {
 		return 0;
 	}
 }
-//Options if statements
+
+int opIfStates(fstream& fileName, char userInput1, string fullFile) {
+	//Note Check
+	if (userInput1 == 'n') {
+		system("cls");
+		cout << "You can start to take notes. When you're done, type 'end'" << endl;
+
+		//Note loop
+		noteLoop(fileName);
+	}
+
+	//General Entries
+	if (userInput1 == 'e') {
+		generalEntries(fullFile, fileName);
+
+	}
+	//Read from file
+	else if (userInput1 == 'r') {
+		readFile(fullFile);
+	}
+	//Delete file
+	else if (userInput1 == 'd') {
+		fileName.close();
+		int result = filesystem::remove(filesystem::current_path() / "files" / fullFile);
+		system("cls");
+		if (result == 1) {
+			cout << fullFile << " has been deleted" << endl << endl;
+			return 0;
+		}
+		else {
+			cout << "Error: 0003" << endl << fullFile << " deletion unsuccessful";
+			return 1;
+		}
+	}
+	//Back
+	else if (userInput1 == 'b') {
+		system("cls");
+		return 0;
+	}
+	//Unknown op
+	else if (userInput1 != 'r' && userInput1 != 'e' && userInput1 != 'n') {
+		system("cls");
+		cout << "ERROR:0002" << endl << "Unknown operator" << endl << endl;
+		return 1;
+	}
+}
+
 int fileFound(string fullFile) {
 	while (true) {
 		fstream fileName(filesystem::current_path() / "files" / fullFile, fstream::out | fstream::app);
@@ -253,49 +299,9 @@ int fileFound(string fullFile) {
 		//Options
 		char userInput1 = options(fullFile);
 
-		//Note Check
-		if (userInput1 == 'n') {
-			system("cls");
-			cout << "You can start to take notes. When you're done, type 'end'" << endl;
+		//If statements
+		opIfStates(fileName, userInput1, fullFile);
 
-			//Note loop
-			noteLoop(fileName);
-		}
-
-		//General Entries
-		if (userInput1 == 'e') {
-			generalEntries(fullFile, fileName);
-
-		}
-		//Read from file
-		else if (userInput1 == 'r') {
-			readFile(fullFile);
-		}
-		//Delete file
-		else if (userInput1 == 'd') {
-			fileName.close();
-			int result = filesystem::remove(filesystem::current_path() / "files" / fullFile);
-			system("cls");
-			if (result == 1) {
-				cout << fullFile << " has been deleted" << endl << endl;
-				return 0;
-			}
-			else {
-				cout << "Error: 0003" << endl << fullFile << " deletion unsuccessful";
-				return 1;
-			}
-		}
-		//Back
-		else if (userInput1 == 'b') {
-			system("cls");
-			return 0;
-		}
-		//Unknown op
-		else if (userInput1 != 'r' && userInput1 != 'e' && userInput1 != 'n') {
-			system("cls");
-			cout << "ERROR:0002" << endl << "Unknown operator" << endl << endl;
-			return 1;
-		}
 		return 0;
 	}
 }
