@@ -1,9 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
 #include <filesystem>
-#include <Windows.h>
 using namespace std;
 
 int fileNotFound(string fullFile) {
