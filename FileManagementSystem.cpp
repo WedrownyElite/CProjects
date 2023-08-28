@@ -132,7 +132,6 @@ int generalEntries(string fullFile, fstream& fileName) {
 		string number;
 		int num = rand() % 10000;
 		std::string id = std::to_string(num);
-		system("cls");
 
 		cout << "Type 'end' to leave" << endl << endl;
 
@@ -218,7 +217,6 @@ int readFile(string fullFile) {
 		string text;
 		int c = 1;
 
-		system("cls");
 		cout << "Type 'end' to leave" << endl << endl;
 		cout << fullFile << ":" << endl;
 
@@ -241,10 +239,43 @@ int readFile(string fullFile) {
 	}
 }
 
+int dirPath(string fullFile, filesystem::path files) {
+	system("cls");
+	cout << files << " > " << fullFile << endl << endl;
+	return 0;
+}
+
+int dirPathBack(filesystem::path files) {
+	system("cls");
+	cout << files << endl << endl;
+	return 0;
+}
+
+int dirPathOp(string fullFile, char userInput1, filesystem::path files) {
+
+	system("cls");
+	//Note path
+	if (userInput1 == 'n') {
+		cout << files << " > " << fullFile << " > " << "Notes" << endl << endl;
+	}
+	else if (userInput1 == 'e') {
+		cout << files << " > " << fullFile << " > " << "Entries" << endl << endl;
+	}
+	else if (userInput1 == 'r') {
+		cout << files << " > " << fullFile << " > " << "Read" << endl << endl;
+	}
+	else {
+		cout << files << endl << endl;
+	}
+	return 0;
+}
+//Option if statements
 int opIfStates(fstream& fileName, char userInput1, string fullFile) {
 	//Note Check
+	const filesystem::path files{"files"};
 	if (userInput1 == 'n') {
-		system("cls");
+		dirPathOp(fullFile, userInput1, files);
+
 		cout << "You can start to take notes. When you're done, type 'end'" << endl;
 
 		//Note loop
@@ -253,11 +284,13 @@ int opIfStates(fstream& fileName, char userInput1, string fullFile) {
 
 	//General Entries
 	if (userInput1 == 'e') {
+		dirPathOp(fullFile, userInput1, files);
 		generalEntries(fullFile, fileName);
 
 	}
 	//Read from file
 	else if (userInput1 == 'r') {
+		dirPathOp(fullFile, userInput1, files);
 		readFile(fullFile);
 	}
 	//Delete file
@@ -276,7 +309,7 @@ int opIfStates(fstream& fileName, char userInput1, string fullFile) {
 	}
 	//Back
 	else if (userInput1 == 'b') {
-		system("cls");
+		dirPathBack(files);
 		return 0;
 	}
 	//Unknown op
@@ -288,9 +321,10 @@ int opIfStates(fstream& fileName, char userInput1, string fullFile) {
 }
 
 int fileFound(string fullFile) {
+	const filesystem::path files{"files"};
 	while (true) {
 		fstream fileName(filesystem::current_path() / "files" / fullFile, fstream::out | fstream::app);
-		system("cls");
+		dirPath(fullFile, files);
 		cout << fullFile << " has been opened!" << endl;
 		cout << endl;
 
@@ -323,6 +357,23 @@ int openFile(string userInput) {
 	return 0;
 }
 
+int printFileNames(filesystem::path files, filesystem::path p) {
+	cout << "Files:" << endl;
+	if (filesystem::is_directory(p / "files")) {
+		for (const auto& entry : filesystem::directory_iterator(files)) {
+			if (entry.is_regular_file()) {
+				cout << entry.path().filename() << endl;
+			}
+		}
+	}
+	else {
+		create_directories(files);
+		cout << "'files' folder created at " << (p / "files").string() << endl << endl;
+	}
+	cout << endl;
+	return 0;
+}
+
 int main() {
 
 	while (true) {
@@ -331,21 +382,11 @@ int main() {
 		string userInput;
 		string text;
 		filesystem::path p = filesystem::current_path();
-		//Print file names from 'files'
 		const filesystem::path files{"files"};
-		if (is_directory(p / "files")) {
-			cout << "Files:" << endl;
-			for (const auto& entry : filesystem::directory_iterator(files)) {
-				if (entry.is_regular_file()) {
-					cout << entry.path().filename() << endl;
-				}
-			}
-			cout << endl;
-		}
-		else {
-			create_directories(files);
-			cout << "'files' folder created at " << (p / "files").string() << endl << endl;
-		}
+
+		dirPathBack(files);
+		//Print file names from 'files'
+			printFileNames(files, p);
 
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
