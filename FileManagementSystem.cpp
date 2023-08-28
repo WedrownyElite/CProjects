@@ -269,7 +269,7 @@ int dirPathOp(string fullFile, char userInput1, filesystem::path files) {
 	}
 	return 0;
 }
-//Option if statements
+
 int opIfStates(fstream& fileName, char userInput1, string fullFile) {
 	//Note Check
 	const filesystem::path files{"files"};
