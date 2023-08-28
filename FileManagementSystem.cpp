@@ -365,6 +365,12 @@ int printFileNames(filesystem::path files, filesystem::path p) {
 				cout << entry.path().filename() << endl;
 			}
 		}
+		cout << endl << "Folders:" << endl;
+		for (const auto& entry : filesystem::directory_iterator(files)) {
+			if (entry.is_directory()) {
+				cout << entry.path().filename() << endl;
+			}
+		}
 	}
 	else {
 		create_directories(files);
