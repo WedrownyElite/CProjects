@@ -273,8 +273,10 @@ int fileFound(string fullFile) {
 		}
 		//Delete file
 		else if (userInput1 == 'd') {
-			int result = filesystem::remove(fullFile);
-			if (result == 0) {
+			fileName.close();
+			int result = filesystem::remove(filesystem::current_path() / "files" / fullFile);
+			system("cls");
+			if (result == 1) {
 				cout << fullFile << " has been deleted" << endl << endl;
 				return 0;
 			}
@@ -325,7 +327,6 @@ int main() {
 		string userInput;
 		string text;
 		filesystem::path p = filesystem::current_path();
-		system("cls");
 		//Print file names from 'files'
 		const filesystem::path files{"files"};
 		if (is_directory(p / "files")) {
