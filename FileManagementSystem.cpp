@@ -384,6 +384,45 @@ int printFileNames(filesystem::path files, filesystem::path p) {
 	return 0;
 }
 
+int createSubFolder(string userInput) {
+	int c = 1;
+	string text;
+
+	filesystem::path p = filesystem::current_path();
+	const filesystem::path files{"files"};
+	dirPathCreate(userInput, files);
+	while (true) {
+		cout << "Files:" << endl;
+		for (const auto& entry : filesystem::directory_iterator(files)) {
+			if (entry.is_regular_file()) {
+				cout << entry.path().filename() << endl;
+			}
+		}
+		cout << endl;
+
+		cout << "Type desired file name:" << endl;
+		cin >> userInput;
+		return 0;
+	}
+}
+
+int createOption(string userInput, filesystem::path files) {
+	char userInput1;
+	dirPathCreate(userInput, files);
+
+	cout << "What would you like to create; Folder(F) / Text Doc(T):" << endl;
+	cin >> userInput1;
+
+	userInput1 = (char)tolower(userInput1);
+	if (userInput1 == 'f') {
+		createSubFolder(userInput);
+	}
+	else if (userInput1 == 't') {
+		createFile(userInput);
+	}
+	return 0;
+}
+
 int openFolder() {
 
 	return 0;
@@ -409,7 +448,7 @@ int main() {
 
 		//Create new file
 		if (userInput == "C" || userInput == "c") {
-			createFile(userInput);
+			createOption(userInput, files);
 		}
 		else if (filesystem::is_directory(p / "files" / userInput)) {
 			openFolder();
