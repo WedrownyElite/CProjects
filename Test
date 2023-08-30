@@ -1,0 +1,16 @@
+#include <iostream>
+#include <filesystem>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	string userInput;
+	const filesystem::path files{"files"};
+	filesystem::path p = filesystem::current_path() / files;
+	cin >> userInput;
+	filesystem::path z = p / userInput;
+	cout << "P " << p;
+	cout << "Z " << z;
+}
