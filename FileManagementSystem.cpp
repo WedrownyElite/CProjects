@@ -4,6 +4,31 @@
 #include <filesystem>
 using namespace std;
 
+int printFileNames() {
+	const filesystem::path f{"files"};
+	filesystem::path p = filesystem::current_path();
+	if (!filesystem::is_directory(p / "files")) {
+		create_directories(f);
+		cout << "'files' folder created at " << (p / "files").string() << endl << endl;
+	}
+	else if (filesystem::is_directory(p / "files")) {
+		cout << "Files:" << endl;
+		for (const auto& entry : filesystem::directory_iterator(f)) {
+			if (entry.is_regular_file()) {
+				cout << entry.path().filename() << endl;
+			}
+		}
+		cout << endl << "Folders:" << endl;
+		for (const auto& entry : filesystem::directory_iterator(f)) {
+			if (entry.is_directory()) {
+				cout << entry.path().filename() << endl;
+			}
+			cout << endl;
+		}
+	}
+	return 0;
+}
+
 int fileNotFound(string fullFile) {
 	system("cls");
 	cout << "ERROR:0000 " << endl << fullFile << " Not found!" << endl << endl;
@@ -27,21 +52,27 @@ int options(string fullFile) {
 	return(userInput1);
 }
 
-int printFileNames(int c, string text, fstream& DBList) {
-	while (getline(DBList, text)) {
-		cout << text << endl;
-		c++;
+int uCharCheck(string openUserInput) {
+	const char uchar[] = { '<', '#', '>', '$', '+', '%', '!', '`', '&', '*', '\'', '"', '|', '{', '}', '?', '=', '/', '\\', ':', ' ', '@' };
+	for (int a = 0; openUserInput[a] != '\0'; a++) {
+		for (int d = 0; d < 21; d++) {
+			if (openUserInput[a] == uchar[d]) {
+				system("cls");
+				cout << '\'' << openUserInput << '\'' << " contains an illegal character: " << uchar[d] << endl << endl;
+				return 1;
+			}
+		}
 	}
 	return 0;
 }
 
-int uCharCheck(string userInput) {
+int uCharCheckFolder(string folderUserInput) {
 	const char uchar[] = { '<', '#', '>', '$', '+', '%', '!', '`', '&', '*', '\'', '"', '|', '{', '}', '?', '=', '/', '\\', ':', ' ', '@' };
-	for (int a = 0; userInput[a] != '\0'; a++) {
+	for (int a = 0; folderUserInput[a] != '\0'; a++) {
 		for (int d = 0; d < 21; d++) {
-			if (userInput[a] == uchar[d]) {
+			if (folderUserInput[a] == uchar[d]) {
 				system("cls");
-				cout << '\'' << userInput << '\'' << " contains an illegal character: " << uchar[d] << endl << endl;
+				cout << '\'' << folderUserInput << '\'' << " contains an illegal character: " << uchar[d] << endl << endl;
 				return 1;
 			}
 		}
@@ -80,41 +111,36 @@ int dirPathOp(string fullFile, char userInput1, filesystem::path files) {
 	return 0;
 }
 
-int dirPathCreate(string userInput, filesystem::path files) {
+int dirPathCreate() {
+	const filesystem::path files{"files"};
 	system("cls");
 	cout << files << " > " << "Create" << endl << endl;
 	return 0;
 }
 
-int createFile(string userInput) {
+int createFile() {
 	int c = 1;
 	string text;
+	string fileName;
 
-	filesystem::path p = filesystem::current_path();
-	const filesystem::path files{"files"};
-	dirPathCreate(userInput, files);
+	dirPathCreate();
 	while (true) {
-		cout << "Files:" << endl;
-		for (const auto& entry : filesystem::directory_iterator(files)) {
-			if (entry.is_regular_file()) {
-				cout << entry.path().filename() << endl;
-			}
-		}
+		printFileNames();
 		cout << endl;
 
 		cout << "Type desired file name:" << endl;
-		cin >> userInput;
+		cin >> fileName;
 
 		//Unique char check
-		uCharCheck(userInput);
-		if (uCharCheck(userInput) == 0) {
+		uCharCheck(fileName);
+		if (uCharCheck(fileName) == 0) {
 			break;
 		}
 	}
 
 
 	//Add .txt to the end of userInput
-	string fileName1 = userInput + ".txt";
+	string fileName1 = fileName + ".txt";
 
 	//File !exist check
 	if (!std::filesystem::exists(filesystem::current_path() / "files" / fileName1)) {
@@ -361,36 +387,14 @@ int openFile(string userInput) {
 	return 0;
 }
 
-int printFileNames(filesystem::path files, filesystem::path p) {
-	if (filesystem::is_directory(p / "files")) {
-		cout << "Files:" << endl;
-		for (const auto& entry : filesystem::directory_iterator(files)) {
-			if (entry.is_regular_file()) {
-				cout << entry.path().filename() << endl;
-			}
-		}
-		cout << endl << "Folders:" << endl;
-		for (const auto& entry : filesystem::directory_iterator(files)) {
-			if (entry.is_directory()) {
-				cout << entry.path().filename() << endl;
-			}
-		}
-	}
-	else {
-		create_directories(files);
-		cout << "'files' folder created at " << (p / "files").string() << endl << endl;
-	}
-	cout << endl;
-	return 0;
-}
-
-int createSubFolder(string userInput) {
+int createSubFolder() {
 	int c = 1;
-	string text;
+	string folderName;
 
 	filesystem::path p = filesystem::current_path();
+	filesystem::path next_directory(filesystem::path path, string dir_name);
 	const filesystem::path files{"files"};
-	dirPathCreate(userInput, files);
+	dirPathCreate();
 	while (true) {
 		cout << "Files:" << endl;
 		for (const auto& entry : filesystem::directory_iterator(files)) {
@@ -400,25 +404,47 @@ int createSubFolder(string userInput) {
 		}
 		cout << endl;
 
-		cout << "Type desired file name:" << endl;
-		cin >> userInput;
+		cout << "Type desired folder name:" << endl;
+		cin >> folderName;
+
+		uCharCheckFolder(folderName);
+		if (uCharCheckFolder(folderName) == 0) {
+			break;
+		}
 		return 0;
+	}
+	//Folder !exists check
+	if (!std::filesystem::exists(filesystem::current_path() / "files" / folderName)) {
+		//Create the folder
+		filesystem::create_directories(folderName);
+		return 0;
+	}
+	//Folder exists check
+	else if (std::filesystem::exists(filesystem::current_path() / "files" / folderName)) {
+		system("cls");
+		cout << "ERROR:0001" << endl << folderName << " ALREADY EXISTS!" << endl << endl;
+		return 1;
 	}
 }
 
-int createOption(string userInput, filesystem::path files) {
-	char userInput1;
-	dirPathCreate(userInput, files);
+int createOption(string openUserInput, filesystem::path files) {
+	char createUserInput;
+	dirPathCreate();
+	printFileNames();
 
+	cout << "Type 'b' to go back" << endl;
 	cout << "What would you like to create; Folder(F) / Text Doc(T):" << endl;
-	cin >> userInput1;
+	cin >> createUserInput;
 
-	userInput1 = (char)tolower(userInput1);
-	if (userInput1 == 'f') {
-		createSubFolder(userInput);
+	createUserInput = (char)tolower(createUserInput);
+	if (createUserInput == 'f') {
+		createSubFolder();
 	}
-	else if (userInput1 == 't') {
-		createFile(userInput);
+	else if (createUserInput == 't') {
+		createFile();
+	}
+	else if (createUserInput == 'b') {
+		return 0;
 	}
 	return 0;
 }
@@ -433,29 +459,29 @@ int main() {
 	while (true) {
 
 		int c = 1;
-		string userInput;
+		string openUserInput;
 		string text;
 		filesystem::path p = filesystem::current_path();
 		const filesystem::path files{"files"};
 
 		dirPathBack(files);
 		//Print file names from 'files'
-		printFileNames(files, p);
+		printFileNames();
 
 		//User input
 		cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
-		cin >> userInput;
+		cin >> openUserInput;
 
 		//Create new file
-		if (userInput == "C" || userInput == "c") {
-			createOption(userInput, files);
+		if (openUserInput == "C" || openUserInput == "c") {
+			createOption(openUserInput, files);
 		}
-		else if (filesystem::is_directory(p / "files" / userInput)) {
+		else if (filesystem::is_directory(p / "files" / openUserInput)) {
 			openFolder();
 		}
 		//Open existing file
 		else {
-			openFile(userInput);
+			openFile(openUserInput);
 		}
 	}
 }
