@@ -3,7 +3,8 @@
 	#include <string>
 	#include <filesystem>
 	using namespace std;
-
+	//IMPLEMENT VARIABLE FILESYSTEM::PATH, START Filesystem::path p = filesystem::current_path() / userInput; AFTER EACH USER INPUT.
+	//CHECK TEST
 	int printFileNames() {
 		const filesystem::path f{"files"};
 		filesystem::path p = filesystem::current_path();
@@ -423,9 +424,8 @@
 		int c = 1;
 		string folderName;
 
-		filesystem::path p = filesystem::current_path();
-		filesystem::path next_directory(filesystem::path path, string dir_name);
 		const filesystem::path files{"files"};
+		filesystem::path p = filesystem::current_path() / files;
 		dirPathCreate();
 		while (true) {
 			cout << "Files:" << endl;
@@ -446,6 +446,7 @@
 			return 0;
 		}
 		//Folder !exists check
+		filesystem::current_path() = filesystem::current_path() / "files" / folderName;
 		if (!std::filesystem::exists(filesystem::current_path() / "files" / folderName)) {
 			//Create the folder
 			filesystem::create_directories(folderName);
