@@ -29,6 +29,31 @@
 		return 0;
 	}
 
+	int printFileNamesSubFolder(string openUserInput) {
+		const filesystem::path f{"files"};
+		filesystem::path p = filesystem::current_path();
+		if (!filesystem::is_directory(p / "files" / openUserInput)) {
+			create_directories(f);
+			cout << "'files' folder created at " << (p / "files").string() << endl << endl;
+		}
+		else if (filesystem::is_directory(p / "files" / openUserInput)) {
+			cout << "Files:" << endl;
+			for (const auto& entry : filesystem::directory_iterator(f)) {
+				if (entry.is_regular_file()) {
+					cout << entry.path().filename() << endl;
+				}
+			}
+			cout << endl << "Folders:" << endl;
+			for (const auto& entry : filesystem::directory_iterator(f)) {
+				if (entry.is_directory()) {
+					cout << entry.path().filename() << endl;
+				}
+			}
+		}
+		cout << endl;
+		return 0;
+	}
+
 	int fileNotFound(string fullFile) {
 		system("cls");
 		cout << "ERROR:0000 " << endl << fullFile << " Not found!" << endl << endl;
@@ -115,6 +140,13 @@
 		const filesystem::path files{"files"};
 		system("cls");
 		cout << files << " > " << "Create" << endl << endl;
+		return 0;
+	}
+
+	int dirPathSubFolder(string openUserInput) {
+		const filesystem::path files{"files"};
+		system("cls");
+		cout << files << " > " << openUserInput << endl << endl;
 		return 0;
 	}
 
@@ -449,8 +481,9 @@
 		return 0;
 	}
 
-	int openFolder() {
-
+	int openFolder(string openUserInput) {
+		dirPathSubFolder(openUserInput);
+		printFileNamesSubFolder(openUserInput);
 		return 0;
 	}
 
@@ -477,7 +510,7 @@
 				createOption(openUserInput, files);
 			}
 			else if (filesystem::is_directory(p / "files" / openUserInput)) {
-				openFolder();
+				openFolder(openUserInput);
 			}
 			//Open existing file
 			else {
