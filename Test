@@ -6,11 +6,10 @@ using namespace std;
 
 int main()
 {
-	string userInput;
+	string fileName;
 	const filesystem::path files{"files"};
 	filesystem::path p = filesystem::current_path() / files;
-	cin >> userInput;
-	filesystem::path z = p / userInput;
+	cin >> fileName;
+	p = p / fileName;
 	cout << "P " << p;
-	cout << "Z " << z;
 }
