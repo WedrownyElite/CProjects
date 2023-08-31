@@ -3,9 +3,7 @@
 	#include <string>
 	#include <filesystem>
 	using namespace std;
-	//IMPLEMENT VARIABLE FILESYSTEM::PATH, START Filesystem::path p = filesystem::current_path() / userInput; AFTER EACH USER INPUT.
-	//CHECK TEST
-
+	
 	filesystem::path pathRedefineFile(filesystem::path p, string fullFile) {
 		p = p / fullFile;
 		return p;
@@ -24,13 +22,13 @@
 		}
 		else if (filesystem::is_directory(p)) {
 			cout << "Files:" << endl;
-			for (const auto& entry : filesystem::directory_iterator((p).string())) {
+			for (const auto& entry : filesystem::directory_iterator(p)) {
 				if (entry.is_regular_file()) {
 					cout << entry.path().filename() << endl;
 				}
 			}
 			cout << endl << "Folders:" << endl;
-			for (const auto& entry : filesystem::directory_iterator((p).string())) {
+			for (const auto& entry : filesystem::directory_iterator(p)) {
 				if (entry.is_directory()) {
 					cout << entry.path().filename() << endl;
 				}
@@ -88,12 +86,6 @@
 				}
 			}
 		}
-		return 0;
-	}
-
-	int dirPath(string fullFile, filesystem::path files) {
-		system("cls");
-		cout << files << " > " << fullFile << endl << endl;
 		return 0;
 	}
 
@@ -454,12 +446,6 @@
 		return 0;
 	}
 
-	int openFolder(filesystem::path p, string fileName) {
-		dirPath(p);
-		printFileNames(fileName);
-		return 0;
-	}
-
 	int fileFolderCheck() {
 		char fileFolderInput;
 		while (true) {
@@ -483,13 +469,32 @@
 		}
 	}
 
-	int folderQuestion(filesystem::path p) {
+	filesystem::path folderQuestion(filesystem::path p) {
 		while (true) {
 			string fileName;
 			system("cls");
+			printFileNames(p);
+			cout << "Which folder would you like to open?" << endl;
+			cin >> fileName;
+			p = pathRedefineFolder(p, fileName);
+			return p;
+		}
+	}
+
+	filesystem::path fileQuestion(filesystem::path p) {
+		while (true) {
+			string fullFile;
+			string fileName;
+
+			system("cls");
+			printFileNames(p);
 			cout << "Which file would you like to open?" << endl;
 			cin >> fileName;
-			pathRedefineFolder(p, fileName);
+
+			fullFile = fileName + ".txt";
+			p = pathRedefineFile(p, fullFile);
+			openFile(fullFile, p);
+			return p;
 		}
 	}
 
@@ -501,33 +506,22 @@
 			string text;
 			const filesystem::path files{"files"};
 
-			dirPathBack(files);
+			dirPath(p);
 			//Print file names from 'files'
 			printFileNames(p);
 
 			//FileFolderCheck
-			fileFolderCheck();
-			//Cretae
-			if (fileFolderCheck() == 3) {
+			int fileFolderCheckInt = fileFolderCheck();
+			//Create
+			if (fileFolderCheckInt == 3) {
 				createOption(p);
 			}
 			//Folder
-			else if (fileFolderCheck() == 2) {
-				folderQuestion(p);
+			else if (fileFolderCheckInt == 2) {
+				p = folderQuestion(p);
 			}
-			//User input
-			cout << "Which file would you like to open?" << endl;
-			cin >> fileName;
-			string fullFile = fileName;
-			p = pathRedefineFile(p, fullFile);
-			//Create new file
-			if (filesystem::is_directory(p)) {;
-				openFolder(p, fileName);
-			}
-			//Open existing file
-			else {
-				string fullFile = fileName + ".txt";
-				openFile(fullFile, p);
+			else if (fileFolderCheckInt == 1) {
+				p = fileQuestion(p);
 			}
 		}
 	}
