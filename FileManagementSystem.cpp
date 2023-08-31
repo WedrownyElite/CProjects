@@ -95,18 +95,18 @@
 		return 0;
 	}
 
-	int dirPathOp(string fullFile, char userInput1, filesystem::path p) {
+	int dirPathOp(char userInput1, filesystem::path p) {
 
 		system("cls");
 		//Note path
 		if (userInput1 == 'n') {
-			cout << p << " > " << fullFile << " > " << "Notes" << endl << endl;
+			cout << p << " > " << "Notes" << endl << endl;
 		}
 		else if (userInput1 == 'e') {
-			cout << p << " > " << fullFile << " > " << "Entries" << endl << endl;
+			cout << p << " > " << "Entries" << endl << endl;
 		}
 		else if (userInput1 == 'r') {
-			cout << p << " > " << fullFile << " > " << "Read" << endl << endl;
+			cout << p << " > " << "Read" << endl << endl;
 		}
 		else {
 			cout << p << endl << endl;
@@ -166,7 +166,7 @@
 		return 0;
 	}
 
-	int noteLoop(fstream& fileName) {
+	filesystem::path noteLoop(filesystem::path p, fstream& fileName) {
 		while (true) {
 			string notes;
 			string rawNotes;
@@ -179,7 +179,8 @@
 			if (rawNotes == "end") {
 				fileName.close();
 				system("cls");
-				return 0;
+				p = filesystem::current_path() / "files";
+				return p;
 			}
 
 			//Period check
@@ -194,7 +195,7 @@
 		}
 	}
 
-	int generalEntries(string fullFile, fstream& fileName) {
+	filesystem::path generalEntries(string fullFile, fstream& fileName, filesystem::path p) {
 		while (true) {
 			string fname;
 			string lname;
@@ -211,7 +212,7 @@
 			//'end' check
 			if (lname == "end") {
 				system("cls");
-				return 0;
+				return p;
 			}
 			// First name
 			cout << "First name: ";
@@ -219,7 +220,7 @@
 			//'end' check
 			if (fname == "end") {
 				system("cls");
-				return 0;
+				return p;
 			}
 			// Gender
 			cout << "Gender: ";
@@ -227,7 +228,8 @@
 			//'end' check
 			if (gender == "end") {
 				system("cls");
-				return 0;
+				p = filesystem::current_path() / "files";
+				return p;
 			}
 			// Gender Check
 			while (gender != "Female" && gender != "F" && gender != "Male" && gender != "M") {
@@ -246,7 +248,8 @@
 			//'end' check
 			if (number == "end") {
 				system("cls");
-				return 0;
+				p = filesystem::current_path() / "files";
+				return p;
 			}
 			// Phone number check
 			while (number.length() > 10) {
@@ -272,16 +275,19 @@
 
 			// Answered yes
 			if (answer == 'Y') {
-				fileName = fstream(filesystem::current_path() / "files" / fullFile, fstream::out | fstream::app);
+				fileName = fstream(p, fstream::out | fstream::app);
 				fileName << userText << endl;
 				fileName.close();
 				cout << "Saved successfully!" << endl;
 			}
+			else if (answer == 'N') {
+				break;
+			}
 		}
-		return 0;
+		return p;
 	}
 
-	int readFile(string fullFile) {
+	filesystem::path readFile(filesystem::path p, string fullFile) {
 		while (true) {
 			string userInput;
 			string text;
@@ -303,65 +309,69 @@
 			//'end' Check
 			if (userInput == "end") {
 				system("cls");
-				return 0;
+				p = filesystem::current_path() / "files";
+				return p;
 			}
-			return 0;
+			return p;
 		}
 	}
 
-	int opIfStates(fstream& fileName, char userInput1, string fullFile) {
+	filesystem::path opIfStates(fstream& fileName, char userInput1, string fullFile, filesystem::path p) {
 		//Note Check
-		const filesystem::path files{"files"};
 		if (userInput1 == 'n') {
-			dirPathOp(fullFile, userInput1, files);
+			dirPathOp(userInput1, p);
 
 			cout << "You can start to take notes. When you're done, type 'end'" << endl;
 
 			//Note loop
-			noteLoop(fileName);
+			p = noteLoop(p, fileName);
 		}
 
 		//General Entries
 		if (userInput1 == 'e') {
-			dirPathOp(fullFile, userInput1, files);
-			generalEntries(fullFile, fileName);
+			dirPathOp(userInput1, p);
+			p = generalEntries(fullFile, fileName, p);
 
 		}
 		//Read from file
 		else if (userInput1 == 'r') {
-			dirPathOp(fullFile, userInput1, files);
-			readFile(fullFile);
+			dirPathOp(userInput1, p);
+			p = readFile(p, fullFile);
 		}
 		//Delete file
 		else if (userInput1 == 'd') {
 			fileName.close();
-			int result = filesystem::remove(filesystem::current_path() / "files" / fullFile);
+			int result = filesystem::remove(p / fullFile);
 			system("cls");
 			if (result == 1) {
 				cout << fullFile << " has been deleted" << endl << endl;
-				return 0;
+				p = filesystem::current_path() / "files";
+				return p;
 			}
 			else {
 				cout << "Error: 0003" << endl << fullFile << " deletion unsuccessful";
-				return 1;
+				p = filesystem::current_path() / "files";
+				return p;
 			}
 		}
 		//Back
 		else if (userInput1 == 'b') {
-			dirPathBack(files);
-			return 0;
+			p = filesystem::current_path() / "files";
+			dirPath(p);
+			return p;
 		}
 		//Unknown op
 		else if (userInput1 != 'r' && userInput1 != 'e' && userInput1 != 'n') {
 			system("cls");
 			cout << "ERROR:0002" << endl << "Unknown operator" << endl << endl;
-			return 1;
+			p = filesystem::current_path() / "files";
+			return p;
 		}
+		return p;
 	}
 
-	int fileFound(string fullFile, filesystem::path p) {
+	filesystem::path fileFound(string fullFile, filesystem::path p) {
 		while (true) {
-			p = pathRedefineFile(p, fullFile);
 			fstream fileName(p, fstream::out | fstream::app);
 			dirPath(p);
 			cout << fullFile << " has been opened!" << endl;
@@ -371,29 +381,27 @@
 			char userInput1 = options(fullFile);
 
 			//If statements
-			opIfStates(fileName, userInput1, fullFile);
+			p = opIfStates(fileName, userInput1, fullFile, p);
 
-			return 0;
+			return p;
 		}
 	}
 
-	int openFile(string fullFile, filesystem::path p) {
+	filesystem::path openFile(string fullFile, filesystem::path p) {
 		int c = 1;
 
 		//File found
 		if (std::filesystem::exists(p)) {
-			fileFound(fullFile, p);
-			return 0;
+			p = fileFound(fullFile, p);
 		}
 		//File not found
 		else if (!std::filesystem::exists(p)) {
 			fileNotFound(fullFile);
-			return 1;
 		}
-		return 0;
+		return p;
 	}
 
-	int createSubFolder(filesystem::path p) {
+	int createFolder(filesystem::path p) {
 		int c = 1;
 		string folderName;
 		dirPathCreate(p);
@@ -413,7 +421,7 @@
 		if (!std::filesystem::exists(p / folderName)) {
 			//Create the folder
 			filesystem::create_directories(p / folderName);
-			cout << "Folder created at " << p;
+			cout << "Folder created at " << p / folderName;
 			return 0;
 		}
 		//Folder exists check
@@ -435,7 +443,7 @@
 
 		createUserInput = (char)tolower(createUserInput);
 		if (createUserInput == 'f') {
-			createSubFolder(p);
+			createFolder(p);
 		}
 		else if (createUserInput == 't') {
 			createFile(p);
@@ -446,9 +454,10 @@
 		return 0;
 	}
 
-	int fileFolderCheck() {
+	int fileFolderCheck(filesystem::path p) {
 		char fileFolderInput;
 		while (true) {
+			printFileNames(p);
 			cout << "Are you opening a file(T), or folder(F)? (Type 'C' to create)" << endl;
 			cin >> fileFolderInput;
 
@@ -464,7 +473,7 @@
 			}
 			else {
 				system("cls");
-				cout << "Unknown character";
+				cout << "Unknown character" << endl;
 			}
 		}
 	}
@@ -472,7 +481,7 @@
 	filesystem::path folderQuestion(filesystem::path p) {
 		while (true) {
 			string fileName;
-			system("cls");
+			dirPath(p);
 			printFileNames(p);
 			cout << "Which folder would you like to open?" << endl;
 			cin >> fileName;
@@ -486,14 +495,14 @@
 			string fullFile;
 			string fileName;
 
-			system("cls");
+			dirPath(p);
 			printFileNames(p);
 			cout << "Which file would you like to open?" << endl;
 			cin >> fileName;
 
 			fullFile = fileName + ".txt";
 			p = pathRedefineFile(p, fullFile);
-			openFile(fullFile, p);
+			p = openFile(fullFile, p);
 			return p;
 		}
 	}
@@ -507,11 +516,9 @@
 			const filesystem::path files{"files"};
 
 			dirPath(p);
-			//Print file names from 'files'
-			printFileNames(p);
 
 			//FileFolderCheck
-			int fileFolderCheckInt = fileFolderCheck();
+			int fileFolderCheckInt = fileFolderCheck(p);
 			//Create
 			if (fileFolderCheckInt == 3) {
 				createOption(p);
