@@ -5,6 +5,13 @@
 	using namespace std;
 	//IMPLEMENT VARIABLE FILESYSTEM::PATH, START Filesystem::path p = filesystem::current_path() / userInput; AFTER EACH USER INPUT.
 	//CHECK TEST
+
+	int pathRedefine(string fileName) {
+		filesystem::path p = filesystem::current_path() / "files";
+		p = p / fileName;
+		return 0;
+	}
+
 	int printFileNames() {
 		const filesystem::path f{"files"};
 		filesystem::path p = filesystem::current_path();
@@ -30,14 +37,14 @@
 		return 0;
 	}
 
-	int printFileNamesSubFolder(string openUserInput) {
+	int printFileNamesSubFolder(string fileName) {
 		const filesystem::path f{"files"};
 		filesystem::path p = filesystem::current_path();
-		if (!filesystem::is_directory(p / "files" / openUserInput)) {
+		if (!filesystem::is_directory(p / "files" / fileName)) {
 			create_directories(f);
 			cout << "'files' folder created at " << (p / "files").string() << endl << endl;
 		}
-		else if (filesystem::is_directory(p / "files" / openUserInput)) {
+		else if (filesystem::is_directory(p / "files" / fileName)) {
 			cout << "Files:" << endl;
 			for (const auto& entry : filesystem::directory_iterator(f)) {
 				if (entry.is_regular_file()) {
@@ -78,13 +85,13 @@
 		return(userInput1);
 	}
 
-	int uCharCheck(string openUserInput) {
+	int uCharCheck(string fileName) {
 		const char uchar[] = { '<', '#', '>', '$', '+', '%', '!', '`', '&', '*', '\'', '"', '|', '{', '}', '?', '=', '/', '\\', ':', ' ', '@' };
-		for (int a = 0; openUserInput[a] != '\0'; a++) {
+		for (int a = 0; fileName[a] != '\0'; a++) {
 			for (int d = 0; d < 21; d++) {
-				if (openUserInput[a] == uchar[d]) {
+				if (fileName[a] == uchar[d]) {
 					system("cls");
-					cout << '\'' << openUserInput << '\'' << " contains an illegal character: " << uchar[d] << endl << endl;
+					cout << '\'' << fileName << '\'' << " contains an illegal character: " << uchar[d] << endl << endl;
 					return 1;
 				}
 			}
@@ -144,10 +151,10 @@
 		return 0;
 	}
 
-	int dirPathSubFolder(string openUserInput) {
+	int dirPathSubFolder(string fileName) {
 		const filesystem::path files{"files"};
 		system("cls");
-		cout << files << " > " << openUserInput << endl << endl;
+		cout << files << " > " << fileName << endl << endl;
 		return 0;
 	}
 
@@ -460,7 +467,7 @@
 		}
 	}
 
-	int createOption(string openUserInput, filesystem::path files) {
+	int createOption(string fileName, filesystem::path files) {
 		char createUserInput;
 		dirPathCreate();
 		printFileNames();
@@ -482,20 +489,19 @@
 		return 0;
 	}
 
-	int openFolder(string openUserInput) {
-		dirPathSubFolder(openUserInput);
-		printFileNamesSubFolder(openUserInput);
+	int openFolder(string fileName) {
+		dirPathSubFolder(fileName);
+		printFileNamesSubFolder(fileName);
 		return 0;
 	}
 
 	int main() {
-
+		filesystem::path p = filesystem::current_path() / "files";
 		while (true) {
 
 			int c = 1;
-			string openUserInput;
+			string fileName;
 			string text;
-			filesystem::path p = filesystem::current_path();
 			const filesystem::path files{"files"};
 
 			dirPathBack(files);
@@ -504,18 +510,20 @@
 
 			//User input
 			cout << "Which file would you like to open? (TYPE C TO CREATE)" << endl;
-			cin >> openUserInput;
+			cin >> fileName;
 
 			//Create new file
-			if (openUserInput == "C" || openUserInput == "c") {
-				createOption(openUserInput, files);
+			if (fileName == "C" || fileName == "c") {
+				createOption(fileName, files);
 			}
-			else if (filesystem::is_directory(p / "files" / openUserInput)) {
-				openFolder(openUserInput);
+			else if (filesystem::is_directory(p)) {
+				openFolder(fileName);
+				pathRedefine(fileName);
 			}
 			//Open existing file
 			else {
-				openFile(openUserInput);
+				openFile(fileName);
+				pathRedefine(fileName);
 			}
 		}
 	}
