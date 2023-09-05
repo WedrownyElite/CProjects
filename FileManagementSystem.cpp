@@ -206,6 +206,7 @@
 			//'end' check
 			if (lname == "end") {
 				system("cls");
+				p = filesystem::current_path() / "files";
 				return p;
 			}
 			// First name
@@ -214,6 +215,7 @@
 			//'end' check
 			if (fname == "end") {
 				system("cls");
+				p = filesystem::current_path() / "files";
 				return p;
 			}
 			// Gender
@@ -335,7 +337,7 @@
 		//Delete file
 		else if (userInput1 == 'd') {
 			fileName.close();
-			int result = filesystem::remove(p / fullFile);
+			int result = filesystem::remove(p);
 			system("cls");
 			if (result == 1) {
 				cout << fullFile << " has been deleted" << endl << endl;
