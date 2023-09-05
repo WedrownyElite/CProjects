@@ -3,6 +3,8 @@
 	#include <string>
 	#include <filesystem>
 	using namespace std;
+
+	//Add a way to go back one folder in fileFolderCheck, have fun heh
 	
 	filesystem::path pathRedefineFile(filesystem::path p, string fullFile) {
 		p = p / fullFile;
