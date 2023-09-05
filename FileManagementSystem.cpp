@@ -38,10 +38,11 @@
 		return 0;
 	}
 
-	int fileNotFound(string fullFile) {
+	filesystem::path fileNotFound(string fullFile, filesystem::path p) {
 		system("cls");
 		cout << "ERROR:0000 " << endl << fullFile << " Not found!" << endl << endl;
-		return 1;
+		p = filesystem::current_path() / "files";
+		return p;
 	}
 
 	int options(string fullFile) {
@@ -89,14 +90,7 @@
 		return 0;
 	}
 
-	int dirPathBack(filesystem::path files) {
-		system("cls");
-		cout << files << endl << endl;
-		return 0;
-	}
-
 	int dirPathOp(char userInput1, filesystem::path p) {
-
 		system("cls");
 		//Note path
 		if (userInput1 == 'n') {
@@ -396,7 +390,7 @@
 		}
 		//File not found
 		else if (!std::filesystem::exists(p)) {
-			fileNotFound(fullFile);
+			p = fileNotFound(fullFile, p);
 		}
 		return p;
 	}
@@ -471,9 +465,10 @@
 			else if (fileFolderInput == 'c') {
 				return 3;
 			}
-			else {
+			else if (fileFolderInput != 'c' && fileFolderInput != 'f' && fileFolderInput != 't'){
 				system("cls");
-				cout << "Unknown character" << endl;
+				cout << "Error: 0004" << endl << "Unknown character" << endl << endl;
+				printFileNames(p);
 			}
 		}
 	}
