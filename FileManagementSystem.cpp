@@ -6,7 +6,8 @@
 
 	//Add a way to go back one folder in fileFolderCheck, have fun heh
 	
-	filesystem::path pathRedefineFile(filesystem::path p, string fullFile) {
+	filesystem::path pathRedefineFile(filesystem::path p, string fullFile, string k) {
+		k.push_back(fullFile);
 		p = p / fullFile;
 		return p;
 	}
@@ -456,6 +457,7 @@
 		char fileFolderInput;
 		while (true) {
 			printFileNames(p);
+			cout << "type 'b' to go back" << endl;
 			cout << "Are you opening a file(T), or folder(F)? (Type 'C' to create)" << endl;
 			cin >> fileFolderInput;
 
@@ -468,6 +470,9 @@
 			}
 			else if (fileFolderInput == 'c') {
 				return 3;
+			}
+			else if (fileFolderInput == 'b') {
+				return 4;
 			}
 			else if (fileFolderInput != 'c' && fileFolderInput != 'f' && fileFolderInput != 't'){
 				system("cls");
@@ -489,7 +494,7 @@
 		}
 	}
 
-	filesystem::path fileQuestion(filesystem::path p) {
+	filesystem::path fileQuestion(filesystem::path p, string k) {
 		while (true) {
 			string fullFile;
 			string fileName;
@@ -500,7 +505,7 @@
 			cin >> fileName;
 
 			fullFile = fileName + ".txt";
-			p = pathRedefineFile(p, fullFile);
+			p = pathRedefineFile(p, fullFile, k);
 			p = openFile(fullFile, p);
 			return p;
 		}
@@ -509,6 +514,7 @@
 	int main() {
 		filesystem::path p = filesystem::current_path() / "files";
 		while (true) {
+			vector<string> k;
 			int c = 1;
 			string fileName;
 			string text;
@@ -527,7 +533,7 @@
 				p = folderQuestion(p);
 			}
 			else if (fileFolderCheckInt == 1) {
-				p = fileQuestion(p);
+				p = fileQuestion(p, k);
 			}
 		}
 	}
