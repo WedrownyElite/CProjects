@@ -6,17 +6,19 @@ using namespace std;
 
 //Add a way to go back one folder in fileFolderCheck, have fun heh
 
-filesystem::path pathRedefineFile(filesystem::path p, string fullFile, vector<string>& pastInputFiles, int& pastInputFilesNum) {
-	pastInputFiles.push_back(fullFile);
+filesystem::path pathRedefineFile(filesystem::path p, string fullFile, vector<filesystem::path>& pastInputFiles, int& pastInputFilesNum) {
 	pastInputFilesNum++;
 	p = p / fullFile;
+
+	pastInputFiles.push_back(p);
 	return p;
 }
 
-filesystem::path pathRedefineFolder(filesystem::path p, string fileName, vector<string>& pastInputFiles, int& pastInputFilesNum) {
-	pastInputFiles.push_back(fileName);
+filesystem::path pathRedefineFolder(filesystem::path p, string fileName, vector<filesystem::path>& pastInputFiles, int& pastInputFilesNum) {
 	pastInputFilesNum++;
 	p = p / fileName;
+
+	pastInputFiles.push_back(p);
 	return p;
 }
 
@@ -485,7 +487,7 @@ int fileFolderCheck(filesystem::path p) {
 	}
 }
 
-filesystem::path folderQuestion(filesystem::path p, vector<string>& pastInputFiles, int& pastInputFilesNum) {
+filesystem::path folderQuestion(filesystem::path p, vector<filesystem::path>& pastInputFiles, int& pastInputFilesNum) {
 	while (true) {
 		string fileName;
 		dirPath(p);
@@ -497,7 +499,7 @@ filesystem::path folderQuestion(filesystem::path p, vector<string>& pastInputFil
 	}
 }
 
-filesystem::path fileQuestion(filesystem::path p, vector<string>& pastInputFiles, int& pastInputFilesNum) {
+filesystem::path fileQuestion(filesystem::path p, vector<filesystem::path>& pastInputFiles, int& pastInputFilesNum) {
 	while (true) {
 		string fullFile;
 		string fileName;
@@ -514,11 +516,18 @@ filesystem::path fileQuestion(filesystem::path p, vector<string>& pastInputFiles
 	}
 }
 
-int main(vector<string>& pastInputFiles, int& pastInputFilesNum) {
+filesystem::path goBack(filesystem::path p, vector<filesystem::path>& pastInputFiles, int& pastInputFilesNum) {
+	p = pastInputFiles[pastInputFilesNum - 1];
+	pastInputFilesNum--;
+	return p;
+}
+
+int main() {
 	filesystem::path p = filesystem::current_path() / "files";
-	vector<string> pastInputFiles;
+	vector<filesystem::path> pastInputFiles {p};
+	int pastInputFilesNum = 0;
+
 	while (true) {
-		int pastInputFilesNum = 0;
 		int c = 1;
 		string fileName;
 		string text;
@@ -528,16 +537,20 @@ int main(vector<string>& pastInputFiles, int& pastInputFilesNum) {
 
 		//FileFolderCheck
 		int fileFolderCheckInt = fileFolderCheck(p);
-		//Create
-		if (fileFolderCheckInt == 3) {
-			createOption(p);
+		//File
+		if (fileFolderCheckInt == 1) {
+			p = fileQuestion(p, pastInputFiles, pastInputFilesNum);
 		}
 		//Folder
 		else if (fileFolderCheckInt == 2) {
 			p = folderQuestion(p, pastInputFiles, pastInputFilesNum);
 		}
-		else if (fileFolderCheckInt == 1) {
-			p = fileQuestion(p, pastInputFiles, pastInputFilesNum);
+		//Create
+		else if (fileFolderCheckInt == 3) {
+			createOption(p);
+		}
+		else if (fileFolderCheckInt == 4) {
+			p = goBack(p, pastInputFiles, pastInputFilesNum);
 		}
 	}
 }
