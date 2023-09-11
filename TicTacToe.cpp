@@ -1,6 +1,8 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
 
+//THIS USES olc GPE made by onelonecoder.com
+
 class TicTacToe : public olc::PixelGameEngine
 {
 public:
