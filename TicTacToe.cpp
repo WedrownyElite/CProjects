@@ -47,64 +47,63 @@ private:
 
 public:
 	//Win arguments
-	int WinCheck(bool OSquareOne, bool OSquareTwo, bool OSquareThree, bool OSquareFour, bool OSquareFive, bool OSquareSix, bool OSquareSeven, bool OSquareEight, bool OSquareNine, bool XSquareOne, bool XSquareTwo, bool XSquareThree, bool XSquareFour, bool XSquareFive, bool XSquareSix, bool XSquareSeven, bool XSquareEight, bool XSquareNine) {
+	bool WinCheck(enum turn_result, bool OSquareOne, bool OSquareTwo, bool OSquareThree, bool OSquareFour, bool OSquareFive, bool OSquareSix, bool OSquareSeven, bool OSquareEight, bool OSquareNine, bool XSquareOne, bool XSquareTwo, bool XSquareThree, bool XSquareFour, bool XSquareFive, bool XSquareSix, bool XSquareSeven, bool XSquareEight, bool XSquareNine) {
 		//O Win arguments
 		//Horizontal wins
 		if (OSquareOne == true && OSquareTwo == true && OSquareThree == true) {
-			return 1;
+			return true;
 		}
 		else if (OSquareFour == true && OSquareFive == true && OSquareSix == true) {
-			return 1;
+			return true;
 		}
 		else if (OSquareSeven == true && OSquareEight == true && OSquareNine == true) {
-			return 1;
+			return true;
 		}
 		//Vertical wins
 		else if (OSquareOne == true && OSquareFour == true && OSquareSeven == true) {
-			return 1;
+			return true;
 		}
 		else if (OSquareTwo == true && OSquareFive == true && OSquareEight == true) {
-			return 1;
+			return true;
 		}
 		else if (OSquareThree == true && OSquareSix == true && OSquareNine == true) {
-			return 1;
+			return true;
 		}
 		//Angle wins
 		else if (OSquareOne == true && OSquareFive == true && OSquareNine == true) {
-			return 1;
+			return true;
 		}
 		else if (OSquareThree == true && OSquareFive == true && OSquareSeven == true) {
-			return 1;
+			return true;
 		}
 		//X Win arguments
 		//Horizontal wins
 		if (XSquareOne == true && XSquareTwo == true && XSquareThree == true) {
-			return 0;
+			return false;
 		}
 		else if (XSquareFour == true && XSquareFive == true && XSquareSix == true) {
-			return 0;
+			return false;
 		}
 		else if (XSquareSeven == true && XSquareEight == true && XSquareNine == true) {
-			return 0;
+			return false;
 		}
 		//Vertical wins
 		else if (XSquareOne == true && XSquareFour == true && XSquareSeven == true) {
-			return 0;
+			return false;
 		}
 		else if (XSquareTwo == true && XSquareFive == true && XSquareEight == true) {
-			return 0;
+			return false;
 		}
 		else if (XSquareThree == true && XSquareSix == true && XSquareNine == true) {
-			return 0;
+			return false;
 		}
 		//Angle wins
 		else if (XSquareOne == true && XSquareFive == true && XSquareNine == true) {
-			return 0;
+			return false;
 		}
 		else if (XSquareThree == true && XSquareFive == true && XSquareSeven == true) {
-			return 0;
+			return false;
 		}
-		return 2;
 	}
 	bool OnUserCreate() override {
 		return true;
@@ -260,12 +259,13 @@ public:
 			}
 		}
 		//Win check
-		int check = WinCheck(OSquareOne, OSquareTwo, OSquareThree, OSquareFour, OSquareFive, OSquareSix, OSquareSeven, OSquareEight, OSquareNine, XSquareOne, XSquareTwo, XSquareThree, XSquareFour, XSquareFive, XSquareSix, XSquareSeven, XSquareEight, XSquareNine);
-		if (check == '0') {
+		enum turnresult {Player1_Win, Player2_Win, No_Win};
+		bool check = WinCheck(turnresult, OSquareOne, OSquareTwo, OSquareThree, OSquareFour, OSquareFive, OSquareSix, OSquareSeven, OSquareEight, OSquareNine, XSquareOne, XSquareTwo, XSquareThree, XSquareFour, XSquareFive, XSquareSix, XSquareSeven, XSquareEight, XSquareNine);
+		if (check == false) {
 			Clear(olc::BLACK);
 			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
 		}
-		else if (check == '1') {
+		else if (check == true) {
 			Clear(olc::BLACK);
 			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
 		}
