@@ -1,8 +1,6 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
 
-//THIS USES olc PGE made by onelonecoder.com
-
 class TicTacToe : public olc::PixelGameEngine
 {
 public:
@@ -12,6 +10,7 @@ public:
 	}
 
 private:
+	//Square occupied bools
 	bool SquareOne = false;
 	bool SquareTwo = false;
 	bool SquareThree = false;
@@ -21,6 +20,27 @@ private:
 	bool SquareSeven = false;
 	bool SquareEight = false;
 	bool SquareNine = false;
+
+	//Win argument bools (O)
+	bool OSquareOne = false;
+	bool OSquareTwo = false;
+	bool OSquareThree = false;
+	bool OSquareFour = false;
+	bool OSquareFive = false;
+	bool OSquareSix = false;
+	bool OSquareSeven = false;
+	bool OSquareEight = false;
+	bool OSquareNine = false;
+	//Win argument bools (X)
+	bool XSquareOne = false;
+	bool XSquareTwo = false;
+	bool XSquareThree = false;
+	bool XSquareFour = false;
+	bool XSquareFive = false;
+	bool XSquareSix = false;
+	bool XSquareSeven = false;
+	bool XSquareEight = false;
+	bool XSquareNine = false;
 	//True = X False = O
 	bool Turn = false;
 
@@ -44,54 +64,63 @@ public:
 				DrawCircle(30, 30, 20, olc::WHITE);
 				SquareOne = true;
 				Turn = true;
+				OSquareOne = true;
 			}
 			//Square Two
 			else if (float(GetMouseX()) > 60 && (float(GetMouseX())) < 120 && (float(GetMouseY())) > 0 && (float(GetMouseY())) < 60 && SquareTwo == false) {
 				DrawCircle(90, 30, 20, olc::WHITE);
 				SquareTwo = true;
 				Turn = true;
+				OSquareTwo = true;
 			}
 			//Square Three
 			else if (float(GetMouseX()) > 120 && (float(GetMouseX())) < 180 && (float(GetMouseY())) > 0 && (float(GetMouseY())) < 60 && SquareThree == false) {
 				DrawCircle(150, 30, 20, olc::WHITE);
 				SquareThree = true;
 				Turn = true;
+				OSquareThree = true;
 			}
 			//Square Four
 			else if (float(GetMouseX()) < 60 && (float(GetMouseY())) > 60 && (float(GetMouseY())) < 120 && SquareFour == false) {
 				DrawCircle(30, 90, 20, olc::WHITE);
 				SquareFour = true;
 				Turn = true;
+				OSquareFour = true;
 			}
 			//Square Five
 			else if (float(GetMouseX()) > 60 && (float(GetMouseX())) < 120 && (float(GetMouseY())) > 60 && (float(GetMouseY())) < 120 && SquareFive == false) {
 				DrawCircle(90, 90, 20, olc::WHITE);
 				SquareFive = true;
 				Turn = true;
+				OSquareFive = true;
 			}
 			//Square Six
 			else if (float(GetMouseX()) > 120 && (float(GetMouseX())) < 180 && (float(GetMouseY())) > 60 && (float(GetMouseY())) < 120 && SquareSix == false) {
 				DrawCircle(150, 90, 20, olc::WHITE);
 				SquareSix = true;
 				Turn = true;
+				OSquareSix = true;
 			}
 			//Square Seven
 			else if (float(GetMouseX()) < 60 && (float(GetMouseY())) > 120 && SquareSeven == false) {
 				DrawCircle(30, 150, 20, olc::WHITE);
 				SquareSeven = true;
 				Turn = true;
+				OSquareSeven = true;
 			}
 			//Square Eight
 			else if (float(GetMouseX()) > 60 && (float(GetMouseX())) < 120 && (float(GetMouseY())) > 120 && SquareEight == false) {
 				DrawCircle(90, 150, 20, olc::WHITE);
 				SquareEight = true;
 				Turn = true;
+				OSquareEight = true;
 			}
 			//Square Nine
 			else if (float(GetMouseX()) > 120 && (float(GetMouseY())) > 120 && SquareNine == false) {
 				DrawCircle(150, 150, 20, olc::WHITE);
 				SquareNine = true;
 				Turn = true;
+				OSquareNine = true;
 			}
 		}
 		//Draw X
@@ -102,6 +131,7 @@ public:
 				DrawLine(50, 10, 10, 50, olc::WHITE);
 				SquareOne = true;
 				Turn = false;
+				XSquareOne = true;
 			}
 			//Square Two
 			else if (float(GetMouseX()) > 60 && (float(GetMouseX())) < 120 && (float(GetMouseY())) > 0 && (float(GetMouseY())) < 60 && SquareTwo == false) {
@@ -109,6 +139,7 @@ public:
 				DrawLine(110, 10, 70, 50, olc::WHITE);
 				SquareTwo = false;
 				Turn = false;
+				XSquareTwo = true;
 			}
 			//Square Three
 			else if (float(GetMouseX()) > 120 && (float(GetMouseX())) < 180 && (float(GetMouseY())) > 0 && (float(GetMouseY())) < 60 && SquareThree == false) {
@@ -116,6 +147,7 @@ public:
 				DrawLine(170, 10, 130, 50, olc::WHITE);
 				SquareThree = true;
 				Turn = false;
+				XSquareThree = true;
 			}
 			//Square Four
 			else if (float(GetMouseX()) < 60 && (float(GetMouseY())) > 60 && (float(GetMouseY())) < 120 && SquareFour == false) {
@@ -123,6 +155,7 @@ public:
 				DrawLine(50, 70, 10, 110, olc::WHITE);
 				SquareFour = true;
 				Turn = false;
+				XSquareFour = true;
 			}
 			//Square Five
 			else if (float(GetMouseX()) > 60 && (float(GetMouseX())) < 120 && (float(GetMouseY())) > 60 && (float(GetMouseY())) < 120 && SquareFive == false) {
@@ -130,6 +163,7 @@ public:
 				DrawLine(110, 70, 70, 110, olc::WHITE);
 				SquareFive = true;
 				Turn = false;
+				XSquareFive = true;
 			}
 			//Square Six
 			else if (float(GetMouseX()) > 120 && (float(GetMouseX())) < 180 && (float(GetMouseY())) > 60 && (float(GetMouseY())) < 120 && SquareSix == false) {
@@ -137,6 +171,7 @@ public:
 				DrawLine(170, 70, 130, 110, olc::WHITE);
 				SquareSix = true;
 				Turn = false;
+				XSquareSix = true;
 			}
 			//Square Seven
 			else if (float(GetMouseX()) < 60 && (float(GetMouseY())) > 120 && SquareSeven == false) {
@@ -144,6 +179,7 @@ public:
 				DrawLine(50, 130, 10, 170, olc::WHITE);
 				SquareSeven = true;
 				Turn = false;
+				XSquareSeven = true;
 			}
 			//Square Eight
 			else if (float(GetMouseX()) > 60 && (float(GetMouseX())) < 120 && (float(GetMouseY())) > 120 && SquareEight == false) {
@@ -151,6 +187,7 @@ public:
 				DrawLine(110, 130, 70, 170, olc::WHITE);
 				SquareEight = true;
 				Turn = false;
+				XSquareEight = true;
 			}
 			//Square Nine
 			else if (float(GetMouseX()) > 120 && (float(GetMouseY())) > 120 && SquareNine == false) {
@@ -158,7 +195,81 @@ public:
 				DrawLine(170, 130, 130, 170, olc::WHITE);
 				SquareNine = true;
 				Turn = false;
+				XSquareNine = true;
 			}
+		}
+		//Win arguments
+		//O Win arguments
+		//Horizontal wins
+		if (OSquareOne == true && OSquareTwo == true && OSquareThree == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		else if (OSquareFour == true && OSquareFive == true && OSquareSix == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		else if (OSquareSeven == true && OSquareEight == true && OSquareNine == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		//Vertical wins
+		else if (OSquareOne == true && OSquareFour == true && OSquareSeven == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		else if (OSquareTwo == true && OSquareFive == true && OSquareEight== true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		else if (OSquareThree == true && OSquareSix == true && OSquareNine== true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		//Angle wins
+		else if (OSquareOne == true && OSquareFive == true && OSquareNine == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		else if (OSquareThree == true && OSquareFive == true && OSquareSeven == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
+		}
+		//X Win arguments
+		//Horizontal wins
+		if (XSquareOne == true && XSquareTwo == true && XSquareThree == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
+		}
+		else if (XSquareFour == true && XSquareFive == true && XSquareSix == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
+		}
+		else if (XSquareSeven == true && XSquareEight == true && XSquareNine == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
+		}
+		//Vertical wins
+		else if (XSquareOne == true && XSquareFour == true && XSquareSeven == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
+		}
+		else if (XSquareTwo == true && XSquareFive == true && XSquareEight == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
+		}
+		else if (XSquareThree == true && XSquareSix == true && XSquareNine == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
+		}
+		//Angle wins
+		else if (XSquareOne == true && XSquareFive == true && XSquareNine == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
+		}
+		else if (XSquareThree == true && XSquareFive == true && XSquareSeven == true) {
+			Clear(olc::BLACK);
+			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
 		}
 		return true;
 	}
