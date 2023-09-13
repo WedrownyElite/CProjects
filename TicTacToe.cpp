@@ -24,6 +24,8 @@ private:
 	bool SquareEight = false;
 	bool SquareNine = false;
 
+	int menu = 0;
+
 	std::string State;
 	
 	//True = X False = O
@@ -38,12 +40,35 @@ private:
 
 public:
 	void MainMenu() {
-		Clear(olc::BLACK);
-		int menu = 0;
-		if (menu == 0) {
-			DrawString(10, 50, ">> Player vs Player", olc::WHITE, 1);
-			DrawString(10, 70, "Player vs Machine", olc::WHITE, 1);
-			DrawString(50, 90, "Exit", olc::RED, 1);
+		while (true) {
+			Clear(olc::BLACK);
+			if (menu == 0) {
+				DrawString(10, 50, ">> Player vs Player", olc::WHITE, 1);
+				DrawString(10, 70, "Player vs Machine", olc::WHITE, 1);
+				DrawString(50, 90, "Exit", olc::RED, 1);
+			}
+			else if (menu == 1) {
+				DrawString(10, 50, "Player vs Player", olc::WHITE, 1);
+				DrawString(10, 70, ">> Player vs Machine", olc::WHITE, 1);
+				DrawString(50, 90, "Exit", olc::RED, 1);
+			}
+			else if (menu == 2) {
+				DrawString(10, 50, "Player vs Player", olc::WHITE, 1);
+				DrawString(10, 70, "Player vs Machine", olc::WHITE, 1);
+				DrawString(50, 90, ">> Exit", olc::RED, 1);
+			}
+			if (GetKey(olc::Key::DOWN).bPressed && menu < 2) {
+				menu++;
+			}
+			else if (GetKey(olc::Key::DOWN).bPressed && menu == 2) {
+				menu = 0;
+			}
+			else if (GetKey(olc::Key::UP).bPressed && menu > 0) {
+				menu--;
+			}
+			else if (GetKey(olc::Key::UP).bPressed && menu == 0) {
+				menu = 2;
+			}
 		}
 	}
 	TurnResult WinCheck() {
