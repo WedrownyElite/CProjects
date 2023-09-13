@@ -45,65 +45,68 @@ private:
 	//True = X False = O
 	bool Turn = false;
 
+	enum TurnResult { Player1_Win, Player2_Win, No_Win };
+
 public:
 	//Win arguments
-	bool WinCheck(enum turn_result, bool OSquareOne, bool OSquareTwo, bool OSquareThree, bool OSquareFour, bool OSquareFive, bool OSquareSix, bool OSquareSeven, bool OSquareEight, bool OSquareNine, bool XSquareOne, bool XSquareTwo, bool XSquareThree, bool XSquareFour, bool XSquareFive, bool XSquareSix, bool XSquareSeven, bool XSquareEight, bool XSquareNine) {
+	TurnResult WinCheck(bool OSquareOne, bool OSquareTwo, bool OSquareThree, bool OSquareFour, bool OSquareFive, bool OSquareSix, bool OSquareSeven, bool OSquareEight, bool OSquareNine, bool XSquareOne, bool XSquareTwo, bool XSquareThree, bool XSquareFour, bool XSquareFive, bool XSquareSix, bool XSquareSeven, bool XSquareEight, bool XSquareNine) {
 		//O Win arguments
 		//Horizontal wins
 		if (OSquareOne == true && OSquareTwo == true && OSquareThree == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		else if (OSquareFour == true && OSquareFive == true && OSquareSix == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		else if (OSquareSeven == true && OSquareEight == true && OSquareNine == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		//Vertical wins
 		else if (OSquareOne == true && OSquareFour == true && OSquareSeven == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		else if (OSquareTwo == true && OSquareFive == true && OSquareEight == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		else if (OSquareThree == true && OSquareSix == true && OSquareNine == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		//Angle wins
 		else if (OSquareOne == true && OSquareFive == true && OSquareNine == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		else if (OSquareThree == true && OSquareFive == true && OSquareSeven == true) {
-			return true;
+			return TurnResult::Player1_Win;
 		}
 		//X Win arguments
 		//Horizontal wins
 		if (XSquareOne == true && XSquareTwo == true && XSquareThree == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
 		else if (XSquareFour == true && XSquareFive == true && XSquareSix == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
 		else if (XSquareSeven == true && XSquareEight == true && XSquareNine == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
 		//Vertical wins
 		else if (XSquareOne == true && XSquareFour == true && XSquareSeven == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
 		else if (XSquareTwo == true && XSquareFive == true && XSquareEight == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
 		else if (XSquareThree == true && XSquareSix == true && XSquareNine == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
 		//Angle wins
 		else if (XSquareOne == true && XSquareFive == true && XSquareNine == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
 		else if (XSquareThree == true && XSquareFive == true && XSquareSeven == true) {
-			return false;
+			return TurnResult::Player2_Win;
 		}
+		return TurnResult::No_Win;
 	}
 	bool OnUserCreate() override {
 		return true;
@@ -259,13 +262,12 @@ public:
 			}
 		}
 		//Win check
-		enum turnresult {Player1_Win, Player2_Win, No_Win};
-		bool check = WinCheck(turnresult, OSquareOne, OSquareTwo, OSquareThree, OSquareFour, OSquareFive, OSquareSix, OSquareSeven, OSquareEight, OSquareNine, XSquareOne, XSquareTwo, XSquareThree, XSquareFour, XSquareFive, XSquareSix, XSquareSeven, XSquareEight, XSquareNine);
-		if (check == false) {
+		TurnResult Check = WinCheck(OSquareOne, OSquareTwo, OSquareThree, OSquareFour, OSquareFive, OSquareSix, OSquareSeven, OSquareEight, OSquareNine, XSquareOne, XSquareTwo, XSquareThree, XSquareFour, XSquareFive, XSquareSix, XSquareSeven, XSquareEight, XSquareNine);
+		if (Check == TurnResult::Player2_Win) {
 			Clear(olc::BLACK);
 			DrawString(40, 80, "Player 2 Wins!", olc::GREEN, 1);
 		}
-		else if (check == true) {
+		else if (Check == TurnResult::Player1_Win) {
 			Clear(olc::BLACK);
 			DrawString(40, 80, "Player 1 Wins!", olc::GREEN, 1);
 		}
