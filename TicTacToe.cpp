@@ -41,9 +41,9 @@ public:
 		Clear(olc::BLACK);
 		int menu = 0;
 		if (menu == 0) {
-			DrawString(40, 50, ">> Player vs Player", olc::WHITE, 1);
-			DrawString(40, 80, "Player vs Machine", olc::WHITE, 1);
-			DrawString(40, 100, "Exit", olc::RED, 1);
+			DrawString(10, 50, ">> Player vs Player", olc::WHITE, 1);
+			DrawString(10, 70, "Player vs Machine", olc::WHITE, 1);
+			DrawString(50, 90, "Exit", olc::RED, 1);
 		}
 	}
 	TurnResult WinCheck() {
