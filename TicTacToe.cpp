@@ -2,6 +2,8 @@
 #include "olcPixelGameEngine.h"
 #include <vector>
 #include <string>
+#include <thread>
+
 //THIS IS WRITTEN USING OLC GPE, CHECK OUT onelonecoder.com
 //Or else
 class TicTacToe : public olc::PixelGameEngine
@@ -41,6 +43,8 @@ private:
 public:
 	void MainMenu() {
 		Clear(olc::BLACK);
+		SquareVec = { Blank, Blank, Blank, Blank, Blank, Blank, Blank, Blank, Blank };
+		Turn = false;
 		if (menu == 0) {
 			DrawString(10, 50, ">> Player vs Player", olc::WHITE, 1);
 			DrawString(10, 70, "Player vs Machine", olc::WHITE, 1);
@@ -73,6 +77,9 @@ public:
 		}
 		else if (GetKey(olc::Key::ENTER).bPressed && menu == 1) {
 			mode = game::PVM;
+		}
+		else if (GetKey(olc::Key::ENTER).bPressed && menu == 2) {
+			
 		}
 	}
 	bool OnUserCreate() override {
@@ -144,6 +151,10 @@ public:
 		DrawLine(60, 10, 60, ScreenHeight() - 10, olc::WHITE);
 		DrawLine(120, 10, 120, ScreenHeight() - 10, olc::WHITE);
 		DrawString(5, 171, "Backspace = Main Menu", olc::WHITE, 1);
+
+		if (GetKey(olc::Key::BACK).bPressed) {
+			mode = game::MAIN;
+		}
 
 		//Circle Check
 		//Square One
@@ -344,7 +355,7 @@ public:
 		DrawString(5, 171, "Backspace = Main Menu", olc::WHITE, 1);
 
 		if (GetKey(olc::Key::BACK).bPressed) {
-			
+			mode = game::MAIN;
 		}
 		int Bot = rand() % 9;
 		while (true) {
